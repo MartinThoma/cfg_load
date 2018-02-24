@@ -1,0 +1,42 @@
+dataset:
+  script_path: ../datasets/cifar10_keras.py
+umlautüößhere: wörks
+model:
+  script_path: ../models/baseline.py
+optimizer:
+  script_path: ../optimizers/adam_keras.py
+  initial_lr: 0.0001
+train:
+  script_path: ../train/train_keras.py
+  artifacts_path: ../artifacts/cifar10_baseline/
+  batch_size: 64
+  epochs: 1000
+  data_augmentation:
+    samplewise_center: False
+    samplewise_std_normalization: False
+    rotation_range: 0
+    width_shift_range: 0.1
+    height_shift_range: 0.1
+    horizontal_flip: True
+    vertical_flip: False
+    zoom_range: 0
+    shear_range: 0
+    channel_shift_range: 0
+    featurewise_center: False
+    zca_whitening: False
+evaluate:
+  batch_size: 1000
+  augmentation_factor: 32
+  data_augmentation:
+    samplewise_center: False
+    samplewise_std_normalization: False
+    rotation_range: 0
+    width_shift_range: 0.15
+    height_shift_range: 0.15
+    horizontal_flip: True
+    vertical_flip: False
+    zoom_range: 0
+    shear_range: 0
+    channel_shift_range: 0
+    featurewise_center: False
+    zca_whitening: False

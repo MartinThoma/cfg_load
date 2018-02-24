@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""Show what cfg_load.load() returns."""
+
+# internal modules
+import cfg_load
+
+
+def get_parser():
+    """Show what cfg_load.load() returns."""
+    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+    parser = ArgumentParser(description=__doc__,
+                            formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument(dest='filename',
+                        help='read this configuration file',
+                        metavar='FILE')
+    parser.add_argument('--raw',
+                        action='store_true', dest='raw', default=False,
+                        help='only get the raw file; do not execute anything '
+                             'else')
+    return parser
+
+
+if __name__ == '__main__':
+    args = get_parser().parse_args()
+    loaded = cfg_load.load(args.filename, args.raw)
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(loaded)

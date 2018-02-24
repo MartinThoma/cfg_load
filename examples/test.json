@@ -1,0 +1,51 @@
+{
+    "dataset": {
+        "script_path": "/home/moose/GitHub/cfg_loader/datasets/cifar10_keras.py"
+    },
+    "evaluate": {
+        "augmentation_factor": 32,
+        "batch_size": 1000,
+        "data_augmentation": {
+            "channel_shift_range": 0,
+            "featurewise_center": false,
+            "height_shift_range": 0.15,
+            "horizontal_flip": true,
+            "rotation_range": 0,
+            "samplewise_center": false,
+            "samplewise_std_normalization": false,
+            "shear_range": 0,
+            "vertical_flip": false,
+            "width_shift_range": 0.15,
+            "zca_whitening": false,
+            "zoom_range": 0
+        }
+    },
+    "model": {
+        "script_path": "/home/moose/GitHub/cfg_loader/models/baseline.py"
+    },
+    "optimizer": {
+        "initial_lr": 0.0001,
+        "script_path": "/home/moose/GitHub/cfg_loader/optimizers/adam_keras.py"
+    },
+    "train": {
+        "artifacts_path": "/home/moose/GitHub/cfg_loader/artifacts/cifar10_baseline",
+        "batch_size": 64,
+        "data_augmentation": {
+            "channel_shift_range": 0,
+            "featurewise_center": false,
+            "height_shift_range": 0.1,
+            "horizontal_flip": true,
+            "rotation_range": 0,
+            "samplewise_center": false,
+            "samplewise_std_normalization": false,
+            "shear_range": 0,
+            "vertical_flip": false,
+            "width_shift_range": 0.1,
+            "zca_whitening": false,
+            "zoom_range": 0
+        },
+        "epochs": 1000,
+        "script_path": "/home/moose/GitHub/cfg_loader/train/train_keras.py"
+    },
+    "umlautüößhere": "wörks"
+}
