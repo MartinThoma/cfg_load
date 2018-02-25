@@ -47,5 +47,10 @@
         "epochs": 1000,
         "script_path": "/home/moose/GitHub/cfg_loader/train/train_keras.py"
     },
-    "umlautüößhere": "wörks"
+    "umlautüößhere": "wörks",
+    "foo": "bar",
+    "nb_foo": 42,
+    "foo_scale": 42.0,
+    "foo_list": [1, 2, 3],
+    "is_foo": true
 }

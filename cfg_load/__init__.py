@@ -7,6 +7,7 @@
 import configparser
 import imp
 import json
+import logging
 import os
 import sys
 
@@ -47,6 +48,7 @@ def load(filepath, load_raw=False):
         reference_dir = os.path.dirname(filepath)
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
         config = load_modules(config)
+        config = load_env(config)
     return config
 
 
@@ -127,4 +129,33 @@ def load_modules(config):
                 config[target_key] = loaded_module
         if type(config[key]) is dict:
             config[key] = load_modules(config[key])
+    return config
+
+
+def load_env(config):
+    """
+    Load environment variables in config.
+
+    Parameters
+    ----------
+    config : dict
+
+    Returns
+    -------
+    config : dict
+    """
+    logger = logging.getLogger(__name__)
+    for env_name in os.environ:
+        if env_name.startswith('_'):
+            continue
+        if env_name in config:
+            if isinstance(config[env_name], str):
+                config[env_name] = os.environ[env_name]
+            elif isinstance(config[env_name], (list, dict, float, int, bool)):
+                config[env_name] = json.loads(os.environ[env_name])
+            else:
+                logger.warning('Configuration value was {} of type {}, but '
+                               'is overwritten with a string from the '
+                               'environment')
+                config[env_name] = os.environ[env_name]
     return config

@@ -3,7 +3,7 @@ from setuptools import setup
 
 config = {
     'name': 'cfg_load',
-    'version': '0.1.0',
+    'version': '0.1.1',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
