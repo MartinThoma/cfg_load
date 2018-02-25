@@ -83,6 +83,8 @@ also see that it made the paths absolute.
 * No key that starts with `_` will ever be touched.
 * Keys ending in `_path` will be made absolute.
 * Don't worry about Unicode.
+* Every key `[something]_module_path` triggers `cfg_load` to load the
+  file found at `[something]_module_path` as a Python module to `[something]`.
 
 Not there, but planned fo the future:
 
@@ -93,8 +95,8 @@ Not there, but planned fo the future:
 * Every key `[something]_cfg_path` will trigger `cfg_load` to search for
   another config file and append it at `[something]`. By this way you can
   define configuration files recursively.
-* Every key `[something]_module_path` will trigger `cfg_load` to load the
-  file found at `[something]_module_path` as a Python module to `[something]`.
+* If an environment variable with the same name as a config key exists, the
+  take the value of the environment variable
 
 
 ## Development

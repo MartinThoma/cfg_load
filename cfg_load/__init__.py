@@ -5,9 +5,10 @@
 
 # core modules
 import configparser
-import io
+import imp
 import json
 import os
+import sys
 
 # 3rd party modules
 import yaml
@@ -45,6 +46,7 @@ def load(filepath, load_raw=False):
     if not load_raw:
         reference_dir = os.path.dirname(filepath)
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
+        config = load_modules(config)
     return config
 
 
@@ -97,3 +99,32 @@ def load_ini(ini_filepath):
     config = configparser.ConfigParser()
     config.read(ini_filepath)
     return config._sections
+
+
+def load_modules(config):
+    """
+    Every key [SOMETHING]_module_path is loaded as a module.
+
+    The module is accessible at config['SOMETHING'].
+
+    Parameters
+    ----------
+    config : dict
+
+    Returns
+    -------
+    config : dict
+    """
+    keyword = '_module_path'
+    for key in list(config.keys()):
+        if hasattr(key, 'endswith'):
+            if key.startswith('_'):
+                continue
+            if key.endswith(keyword):
+                sys.path.insert(1, os.path.dirname(config[key]))
+                loaded_module = imp.load_source('foobar', config[key])
+                target_key = key[:-len(keyword)]
+                config[target_key] = loaded_module
+        if type(config[key]) is dict:
+            config[key] = load_modules(config[key])
+    return config

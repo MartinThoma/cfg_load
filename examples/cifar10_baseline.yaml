@@ -1,6 +1,8 @@
 dataset:
   script_path: ../datasets/cifar10_keras.py
 umlautüößhere: wörks
+paths_module_path: ../cfg_load/paths.py
+_module_path: dont_touch_me
 model:
   script_path: ../models/baseline.py
 optimizer:
