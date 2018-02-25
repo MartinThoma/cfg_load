@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Utility functions for lidtk."""
+"""Path manipulation functions."""
 
 # core modules
 import os
