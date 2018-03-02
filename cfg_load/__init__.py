@@ -50,7 +50,6 @@ def load(filepath, load_raw=False):
     if not load_raw:
         reference_dir = os.path.dirname(filepath)
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
-        config = load_modules(config)
         config = load_env(config)
         config = Configuration(config, cfg_filepath=filepath)
     return config
@@ -107,35 +106,6 @@ def load_ini(ini_filepath):
     return config._sections
 
 
-def load_modules(config):
-    """
-    Every key [SOMETHING]_module_path is loaded as a module.
-
-    The module is accessible at config['SOMETHING'].
-
-    Parameters
-    ----------
-    config : dict
-
-    Returns
-    -------
-    config : dict
-    """
-    keyword = '_module_path'
-    for key in list(config.keys()):
-        if hasattr(key, 'endswith'):
-            if key.startswith('_'):
-                continue
-            if key.endswith(keyword):
-                sys.path.insert(1, os.path.dirname(config[key]))
-                loaded_module = imp.load_source('foobar', config[key])
-                target_key = key[:-len(keyword)]
-                config[target_key] = loaded_module
-        if type(config[key]) is dict:
-            config[key] = load_modules(config[key])
-    return config
-
-
 def load_env(config):
     """
     Load environment variables in config.
@@ -180,6 +150,7 @@ class Configuration(collections.Mapping):
         self._dict = dict(cfg_dict)   # make a copy
         self._hash = None
         self._add_meta(cfg_filepath)
+        self._load_modules(self._dict)
 
     def __getitem__(self, key):
         return self._dict[key]
@@ -246,3 +217,28 @@ class Configuration(collections.Mapping):
         self.meta = {'cfg_filepath': os.path.abspath(cfg_filepath),
                      'parse_datetime': datetime.now(timezone.utc)}
         return self
+
+    def _load_modules(self, config):
+        """
+        Every key [SOMETHING]_module_path is loaded as a module.
+
+        The module is accessible at config.modules['SOMETHING'].
+
+        Returns
+        -------
+        config : self
+        """
+        self.modules = {}
+        keyword = '_module_path'
+        for key in list(config.keys()):
+            if hasattr(key, 'endswith'):
+                if key.startswith('_'):
+                    continue
+                if key.endswith(keyword):
+                    sys.path.insert(1, os.path.dirname(config[key]))
+                    loaded_module = imp.load_source('foobar', config[key])
+                    target_key = key[:-len(keyword)]
+                    self.modules[target_key] = loaded_module
+            if type(config[key]) is dict:
+                config[key] = self._load_modules(config[key])
+        return config
