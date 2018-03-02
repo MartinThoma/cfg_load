@@ -4,6 +4,7 @@
 """Core functions of the cfg_load."""
 
 # core modules
+from datetime import datetime, timezone
 import configparser
 import imp
 import json
@@ -49,6 +50,7 @@ def load(filepath, load_raw=False):
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
         config = load_modules(config)
         config = load_env(config)
+        config = add_meta(config, cfg_filepath=filepath)
     return config
 
 
@@ -158,4 +160,22 @@ def load_env(config):
                                'is overwritten with a string from the '
                                'environment')
                 config[env_name] = os.environ[env_name]
+    return config
+
+
+def add_meta(config, cfg_filepath):
+    """
+    Add meta data to configuration.
+
+    Parameters
+    ----------
+    config : dict
+    cfg_filepath : str
+
+    Returns
+    -------
+    config : dict
+    """
+    config['_META'] = {'cfg_filepath': os.path.abspath(cfg_filepath),
+                       'parse_datetime': datetime.now(timezone.utc)}
     return config
