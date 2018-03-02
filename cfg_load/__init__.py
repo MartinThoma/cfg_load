@@ -5,11 +5,13 @@
 
 # core modules
 from datetime import datetime, timezone
+import collections
 import configparser
 import imp
 import json
 import logging
 import os
+import pprint
 import sys
 
 # 3rd party modules
@@ -33,7 +35,7 @@ def load(filepath, load_raw=False):
 
     Returns
     -------
-    config : dict
+    config : Configuration(collections.Mapping)
     """
     if filepath.lower().endswith('.yaml') or filepath.lower().endswith('.yml'):
         config = load_yaml(filepath)
@@ -51,7 +53,7 @@ def load(filepath, load_raw=False):
         config = load_modules(config)
         config = load_env(config)
         config = add_meta(config, cfg_filepath=filepath)
-    return config
+    return Configuration(config)
 
 
 def load_yaml(yaml_filepath):
@@ -179,3 +181,68 @@ def add_meta(config, cfg_filepath):
     config['_META'] = {'cfg_filepath': os.path.abspath(cfg_filepath),
                        'parse_datetime': datetime.now(timezone.utc)}
     return config
+
+
+class Configuration(collections.Mapping):
+    """
+    Configuration class.
+
+    Essentially, this is an immutable dictionary.
+
+    Parameters
+    ----------
+    cfg_dict : dict
+    """
+
+    def __init__(self, cfg_dict):
+        self._dict = dict(cfg_dict)   # make a copy
+        self._hash = None
+
+    def __getitem__(self, key):
+        return self._dict[key]
+
+    def __len__(self):
+        return len(self._dict)
+
+    def __iter__(self):
+        return iter(self._dict)
+
+    def __eq__(self, other):
+        return self._dict == other._dict
+
+    def set(self, key, value):
+        """
+        Set a value in the configuration.
+
+        Although it is discouraged to do so, it might be necessary in some
+        cases.
+
+        If you need to overwrite a dictionary, then you should do:
+
+        >> inner_dict = cfg['key']
+        >> inner_dict['inner_key'] = 'new_value'
+        >> cfg.set('key', inner_dict)
+        """
+        self._dict[key] = value
+        return self
+
+    def __str__(self):
+        return 'Configuration({})'.format(self._dict['_META']['cfg_filepath'])
+
+    def __repr__(self):
+        return str(self)
+
+    def pformat(self, indent=4):
+        """
+        Pretty-format the configuration.
+
+        Parameters
+        ----------
+        indent : int
+
+        Returns
+        -------
+        pretty_format_cfg : str
+        """
+        pp = pprint.PrettyPrinter(indent=indent)
+        return pp.pformat(self._dict)

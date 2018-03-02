@@ -51,3 +51,22 @@ class MainTest(unittest.TestCase):
                     'interesting': 'simple'}
         loaded_cfg = cfg_load.load_env(config)
         self.assertDictEqual(expected, loaded_cfg)
+
+    def test_configuration_class(self):
+        path = '../examples/test.json'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg2 = cfg_load.load(filepath)
+
+        path = '../examples/cifar10_baseline.yaml'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg = cfg_load.load(filepath)
+        self.assertEqual(cfg['umlautüößhere'], 'wörks')
+        self.assertEqual(len(cfg), 10)
+        # test cfg.__iter__
+        for key in cfg:
+            continue
+        self.assertNotEqual(cfg, cfg2)
+        self.assertTrue(isinstance(repr(cfg), str))
+        self.assertTrue(isinstance(str(cfg), str))
+        self.assertTrue(isinstance(cfg.pformat(), str))
+        cfg.set('foo', 'bar')
