@@ -52,8 +52,8 @@ def load(filepath, load_raw=False):
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
         config = load_modules(config)
         config = load_env(config)
-        config = add_meta(config, cfg_filepath=filepath)
-    return Configuration(config)
+        config = Configuration(config, cfg_filepath=filepath)
+    return config
 
 
 def load_yaml(yaml_filepath):
@@ -165,24 +165,6 @@ def load_env(config):
     return config
 
 
-def add_meta(config, cfg_filepath):
-    """
-    Add meta data to configuration.
-
-    Parameters
-    ----------
-    config : dict
-    cfg_filepath : str
-
-    Returns
-    -------
-    config : dict
-    """
-    config['_META'] = {'cfg_filepath': os.path.abspath(cfg_filepath),
-                       'parse_datetime': datetime.now(timezone.utc)}
-    return config
-
-
 class Configuration(collections.Mapping):
     """
     Configuration class.
@@ -194,9 +176,10 @@ class Configuration(collections.Mapping):
     cfg_dict : dict
     """
 
-    def __init__(self, cfg_dict):
+    def __init__(self, cfg_dict, cfg_filepath):
         self._dict = dict(cfg_dict)   # make a copy
         self._hash = None
+        self._add_meta(cfg_filepath)
 
     def __getitem__(self, key):
         return self._dict[key]
@@ -227,7 +210,7 @@ class Configuration(collections.Mapping):
         return self
 
     def __str__(self):
-        return 'Configuration({})'.format(self._dict['_META']['cfg_filepath'])
+        return 'Configuration({})'.format(self.meta['cfg_filepath'])
 
     def __repr__(self):
         return str(self)
@@ -246,3 +229,20 @@ class Configuration(collections.Mapping):
         """
         pp = pprint.PrettyPrinter(indent=indent)
         return pp.pformat(self._dict)
+
+    def _add_meta(self, cfg_filepath):
+        """
+        Add meta data to configuration.
+
+        Parameters
+        ----------
+        config : dict
+        cfg_filepath : str
+
+        Returns
+        -------
+        config : dict
+        """
+        self.meta = {'cfg_filepath': os.path.abspath(cfg_filepath),
+                     'parse_datetime': datetime.now(timezone.utc)}
+        return self
