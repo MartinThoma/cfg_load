@@ -19,6 +19,7 @@ import yaml
 
 # internal modules
 import cfg_load.paths
+import cfg_load.remote
 
 
 def load(filepath, load_raw=False):
@@ -150,7 +151,9 @@ class Configuration(collections.Mapping):
         self._dict = dict(cfg_dict)   # make a copy
         self._hash = None
         self._add_meta(cfg_filepath)
+        self.modules = {}
         self._load_modules(self._dict)
+        self._load_remote(self._dict)
 
     def __getitem__(self, key):
         return self._dict[key]
@@ -224,21 +227,64 @@ class Configuration(collections.Mapping):
 
         The module is accessible at config.modules['SOMETHING'].
 
+        Parameters
+        ----------
+        config : dict
+
         Returns
         -------
-        config : self
+        config : dict
         """
-        self.modules = {}
         keyword = '_module_path'
         for key in list(config.keys()):
             if hasattr(key, 'endswith'):
                 if key.startswith('_'):
                     continue
                 if key.endswith(keyword):
+                    # Handler
                     sys.path.insert(1, os.path.dirname(config[key]))
                     loaded_module = imp.load_source('foobar', config[key])
                     target_key = key[:-len(keyword)]
                     self.modules[target_key] = loaded_module
             if type(config[key]) is dict:
                 config[key] = self._load_modules(config[key])
+        return config
+
+    def _load_remote(self, config):
+        """
+        Load remote paths.
+
+        Every key ending with `_load_url` has to have `source_url` and
+        `sink_path`. Sources which are AWS S3 URLs and URLs starting with
+        http(s) will be loaded automatically and stored in the sink. A `policy`
+        parameter can specify if it should be `load_always` or
+        `load_if_missing`.
+
+        Parameters
+        ----------
+        config : dict
+
+        Returns
+        -------
+        config : dict
+        """
+        keyword = '_load_url'
+        for key in list(config.keys()):
+            if hasattr(key, 'endswith'):
+                if key.startswith('_'):
+                    continue
+                if key.endswith(keyword):
+                    # Handler
+                    has_dl_info = ('source_url' in config[key] and
+                                   'sink_path' in config[key])
+                    if not has_dl_info:
+                        logging.warning('The key \'{}\' has not both keys '
+                                        '\'source_url\' and \'sink_path\' '
+                                        .format(key))
+                    else:
+                        source = config[key]['source_url']
+                        sink = config[key]['sink_path']
+                        cfg_load.remote.load(source, sink)
+            if type(config[key]) is dict:
+                config[key] = self._load_remote(config[key])
         return config

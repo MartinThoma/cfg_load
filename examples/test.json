@@ -2,6 +2,9 @@
     "dataset": {
         "script_path": "/home/moose/GitHub/cfg_loader/datasets/cifar10_keras.py"
     },
+    "logo_load_url": {
+        "source_url": "https://zenodo.org/record/841984/files/wili-2018.zip"
+    },
     "evaluate": {
         "augmentation_factor": 32,
         "batch_size": 1000,
@@ -51,6 +54,10 @@
     "foo": "bar",
     "nb_foo": 42,
     "foo_scale": 42.0,
-    "foo_list": [1, 2, 3],
+    "foo_list": [
+        1,
+        2,
+        3
+    ],
     "is_foo": true
 }

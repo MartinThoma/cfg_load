@@ -3,7 +3,7 @@ from setuptools import setup
 
 config = {
     'name': 'cfg_load',
-    'version': '0.1.1',
+    'version': '0.2.0',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
@@ -17,6 +17,7 @@ config = {
     'long_description': ("A tookit for language identification."),
     'install_requires': [
         'PyYAML>=3.12',
+        'requests>=2.18.4',
     ],
     'tests_require': [
         'pytest>=3.3.2',

@@ -8,6 +8,12 @@ model:
 optimizer:
   script_path: ../optimizers/adam_keras.py
   initial_lr: 0.0001
+logo_load_url:
+  source_url: https://martin-thoma.com/images/2017/02/Martin_Thoma_web_thumb.jpg
+  sink_path: ignore_image.jpg
+pdf_load_url:
+  source_url: ftp://ftp.hp.com/pub/hpdm/Documentation/WhitePapers/4.5/WP_HPDM_FTP_Configuration.pdf
+  sink_path: ignore_pdf.pdf
 train:
   script_path: ../train/train_keras.py
   artifacts_path: ../artifacts/cifar10_baseline/

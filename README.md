@@ -80,22 +80,25 @@ also see that it made the paths absolute.
 
 ## Features
 
+* You load your config like this: `cfg = cfg_load.load('examples/test.json')`
 * No key that starts with `_` will ever be touched.
 * Keys ending in `_path` will be made absolute.
 * Don't worry about Unicode.
 * Every key `[something]_module_path` triggers `cfg_load` to load the
-  file found at `[something]_module_path` as a Python module to `[something]`.
+  file found at `[something]_module_path` as a Python module to
+  `cfg.modules['something']`.
 * If an environment variable with the same name as a config key exists, the
   take the value of the environment variable. *Please note*: If the type of
   the overwritten key is not str, then `cfg_load` applies `json.loads` to the
   environment variable.
+* Every key ending with `_load_url` has to have `source_url` and `sink_path`.
+  Files from `source_url` will be loaded automatically and stored in the
+  `sink_path`. A `policy` parameter can specify if it should be `load_always`
+  or `load_if_missing`.
 
 Not there, but planned fo the future:
 
-* Every key ending with `_load_path` has to have `source` and `sink`. Sources
-  which are AWS S3 URLs and URLs starting with http(s) will be loaded
-  automatically and stored in the sink. A `policy` parameter can specify if
-  it should be `load_always` or `load_if_missing`.
+* AWS S3 support for `_load_url`
 * Every key `[something]_cfg_path` will trigger `cfg_load` to search for
   another config file and append it at `[something]`. By this way you can
   define configuration files recursively.
