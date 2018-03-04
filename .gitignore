@@ -106,5 +106,7 @@ venv.bak/
 
 # project specific
 tests/reports/
+ignore_deb.deb
 ignore_image.jpg
 ignore_pdf.pdf
+ignore_zip.zip

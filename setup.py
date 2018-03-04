@@ -1,9 +1,16 @@
 from setuptools import find_packages
 from setuptools import setup
 
+tests_require = ['pytest>=3.3.2',
+                 'pytest-cov>=2.5.1',
+                 'pytest-pep8>=1.0.6',
+                 'boto3',
+                 ]
+aws_require = ['boto3']
+
 config = {
     'name': 'cfg_load',
-    'version': '0.2.0',
+    'version': '0.3.0',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
@@ -19,11 +26,8 @@ config = {
         'PyYAML>=3.12',
         'requests>=2.18.4',
     ],
-    'tests_require': [
-        'pytest>=3.3.2',
-        'pytest-cov>=2.5.1',
-        'pytest-pep8>=1.0.6',
-    ],
+    'tests_require': tests_require,
+    'extras_require': {'all': tests_require + aws_require, },
     'keywords': ['Machine Learning', 'Data Science'],
     'download_url': 'https://github.com/MartinThoma/cfg_load',
     'classifiers': ['Development Status :: 1 - Planning',

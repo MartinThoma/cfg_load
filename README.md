@@ -9,14 +9,16 @@ does the job.
 The recommended way to install cfg_load is:
 
 ```
-$ pip install cfg_load --user
+$ pip install cfg_load[all] --user
 ```
+
+Note: You might have to escape `[` and `]` in some shells like ZSH.
 
 If you want the latest version:
 
 ```
 $ git clone https://github.com/MartinThoma/cfg_load.git; cd cfg_load
-$ pip instell -e . --user
+$ pip instell -e .[all] --user
 ```
 
 
@@ -98,7 +100,6 @@ also see that it made the paths absolute.
 
 Not there, but planned fo the future:
 
-* AWS S3 support for `_load_url`
 * Every key `[something]_cfg_path` will trigger `cfg_load` to search for
   another config file and append it at `[something]`. By this way you can
   define configuration files recursively.

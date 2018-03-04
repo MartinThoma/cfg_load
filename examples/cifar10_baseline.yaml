@@ -12,8 +12,11 @@ logo_load_url:
   source_url: https://martin-thoma.com/images/2017/02/Martin_Thoma_web_thumb.jpg
   sink_path: ignore_image.jpg
 pdf_load_url:
-  source_url: ftp://ftp.hp.com/pub/hpdm/Documentation/WhitePapers/4.5/WP_HPDM_FTP_Configuration.pdf
-  sink_path: ignore_pdf.pdf
+  source_url: ftp://speedtest.tele2.net/1KB.zip
+  sink_path: ignore_zip.zip
+package_load_url:
+  source_url: s3://ryft-public-sample-data/ryft-server-0.13.0-rc3_amd64.deb
+  sink_path: ignore.deb
 train:
   script_path: ../train/train_keras.py
   artifacts_path: ../artifacts/cifar10_baseline/

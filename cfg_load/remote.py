@@ -20,12 +20,17 @@ def load(source_url, sink_path, policy='load_if_missing'):
     file_exists = os.path.isfile(sink_path)
     if file_exists and policy == 'load_if_missing':
         return
-    for protocol in ['http://', 'https://']:
+    known_protocols = [('http://', load_requests),
+                       ('https://', load_requests),
+                       ('ftp://', load_urlretrieve),
+                       ('s3://', load_aws_s3)]
+    for protocol, handler in known_protocols:
         if source_url.startswith(protocol):
-            load_requests(source_url, sink_path)
-    for protocol in ['ftp://']:
-        if source_url.startswith(protocol):
-            load_urlretrieve(source_url, sink_path)
+            handler(source_url, sink_path)
+            break
+    else:
+        raise RuntimeError('Unknown protocol: source_url=\'{}\''
+                           .format(source_url))
 
 
 def load_requests(source_url, sink_path):
@@ -59,3 +64,34 @@ def load_urlretrieve(source_url, sink_path):
         Where the loaded file is stored.
     """
     urlretrieve(source_url, sink_path)
+
+
+def load_aws_s3(source_url, sink_path):
+    """
+    Load a file from AWS S3.
+
+    Parameters
+    ----------
+    source_url : str
+        Where to load the file from.
+    sink_path : str
+        Where the loaded file is stored.
+    """
+    # Import here to make this dependency optional
+    import boto3
+
+    # Parse parts
+    url = source_url[len('s3://'):]
+    bucket, key = url.split('/', 1)
+    if len(key) == 0:
+        raise ValueError('Key was empty for source_url=\'{}\''
+                         .format(source_url))
+
+    # Download file
+    client = boto3.Session().client('s3')
+    response = client.get_object(Bucket=bucket, Key=key)
+
+    # Write file to local file
+    body_string = response['Body'].read()
+    with open(sink_path, 'wb') as f:
+        f.write(body_string)

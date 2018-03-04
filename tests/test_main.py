@@ -61,7 +61,7 @@ class MainTest(unittest.TestCase):
         filepath = pkg_resources.resource_filename('cfg_load', path)
         cfg = cfg_load.load(filepath)
         self.assertEqual(cfg['umlautüößhere'], 'wörks')
-        self.assertEqual(len(cfg), 10)
+        self.assertEqual(len(cfg), 11)
         # test cfg.__iter__
         for key in cfg:
             continue

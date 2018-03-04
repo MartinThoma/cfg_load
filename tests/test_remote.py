@@ -19,8 +19,26 @@ class RemoteTest(unittest.TestCase):
         os.remove(sink)
 
     def test_load_ftp(self):
-        source = ('ftp://ftp.hp.com/pub/hpdm/Documentation/WhitePapers/4.5/'
-                  'WP_HPDM_FTP_Configuration.pdf')
-        sink = 'ignore_pdf-random.pdf'
+        source = ('ftp://speedtest.tele2.net/1KB.zip')
+        sink = 'ignore_zip-random.zip'
         cfg_load.remote.load(source, sink)
         os.remove(sink)
+
+    def test_load_aws_s3(self):
+        source = ('s3://ryft-public-sample-data/'
+                  'ryft-server-0.13.0-rc3_amd64.deb')
+        sink = 'ignore.deb'
+        cfg_load.remote.load(source, sink)
+        os.remove(sink)
+
+    def test_load_aws_s3_error(self):
+        source = 's3://ryft-public-sample-data/'
+        sink = 'ignore.deb'
+        with self.assertRaises(Exception):
+            cfg_load.remote.load(source, sink)
+
+    def test_load_unknown_protocol(self):
+        source = ('bt://sample.com/example.zip')
+        sink = 'ignore_zip-random.zip'
+        with self.assertRaises(Exception):
+            cfg_load.remote.load(source, sink)

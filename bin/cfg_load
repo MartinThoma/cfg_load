@@ -30,7 +30,7 @@ config = {
                 "class": "logging.handlers.RotatingFileHandler",
                 "level": "INFO",
                 "formatter": "simple",
-                "filename": "lidtk.info.log",
+                "filename": "cfg_load.info.log",
                 "maxBytes": 10485760,
                 "backupCount": 20,
                 "encoding": "utf8"
@@ -39,7 +39,7 @@ config = {
                 "class": "logging.handlers.RotatingFileHandler",
                 "level": "ERROR",
                 "formatter": "simple",
-                "filename": "lidtk.errors.log",
+                "filename": "cfg_load.errors.log",
                 "maxBytes": 10485760,
                 "backupCount": 20,
                 "encoding": "utf8"
