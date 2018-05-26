@@ -1,9 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """Test the cfg_load.paths module."""
 
 # core modules
 import unittest
 from copy import deepcopy
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:  # Python 2.7
+    from mock import patch
 
 # internal modules
 import cfg_load.paths

@@ -4,7 +4,7 @@
 """Core functions of the cfg_load."""
 
 # core modules
-from datetime import datetime, timezone
+from datetime import datetime
 import collections
 import configparser
 import imp
@@ -16,6 +16,7 @@ import sys
 
 # 3rd party modules
 import yaml
+import pytz
 
 # internal modules
 import cfg_load.paths
@@ -218,7 +219,7 @@ class Configuration(collections.Mapping):
         config : dict
         """
         self.meta = {'cfg_filepath': os.path.abspath(cfg_filepath),
-                     'parse_datetime': datetime.now(timezone.utc)}
+                     'parse_datetime': datetime.now(pytz.utc)}
         return self
 
     def _load_modules(self, config):

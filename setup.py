@@ -10,7 +10,7 @@ aws_require = ['boto3']
 
 config = {
     'name': 'cfg_load',
-    'version': '0.3.0',
+    'version': '0.3.1',
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
@@ -25,6 +25,7 @@ config = {
     'install_requires': [
         'PyYAML>=3.12',
         'requests>=2.18.4',
+        'pytz>=2018.4',
     ],
     'tests_require': tests_require,
     'extras_require': {'all': tests_require + aws_require, },

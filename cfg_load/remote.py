@@ -1,9 +1,13 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """Load files from remote locations."""
 
 # core modules
-from urllib.request import urlretrieve
+try:
+    from urllib.request import urlretrieve
+except ImportError:  # Python 2
+    from urllib import urlretrieve
 import os
 
 

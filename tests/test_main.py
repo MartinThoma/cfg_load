@@ -1,10 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """Test the cfg_load module."""
 
 # core modules
-from unittest.mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:  # Python 2.7
+    from mock import patch
 import os
 import pkg_resources
 import unittest
+
+# 3rd party modules
+from moto import mock_s3
 
 # internal modules
 import cfg_load
@@ -13,6 +22,7 @@ import cfg_load
 class MainTest(unittest.TestCase):
     """Tests for the cfg_load module."""
 
+    @mock_s3
     def test_load_yaml(self):
         path = '../examples/cifar10_baseline.yaml'  # always use slash
         filepath = pkg_resources.resource_filename('cfg_load', path)
@@ -52,6 +62,7 @@ class MainTest(unittest.TestCase):
         loaded_cfg = cfg_load.load_env(config)
         self.assertDictEqual(expected, loaded_cfg)
 
+    @mock_s3
     def test_configuration_class(self):
         path = '../examples/test.json'  # always use slash
         filepath = pkg_resources.resource_filename('cfg_load', path)
