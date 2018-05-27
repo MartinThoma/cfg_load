@@ -9,7 +9,7 @@ optimizer:
   script_path: ../optimizers/adam_keras.py
   initial_lr: 0.0001
 logo_load_url:
-  source_url: http://www.martin-thoma.de/bilder/Martin_Thoma_web_thumb.jpg
+  source_url: http://foo-bar.de/something.JPG
   sink_path: ignore_image.jpg
 pdf_load_url:
   source_url: ftp://speedtest.tele2.net/1KB.zip
