@@ -5,9 +5,9 @@
 
 # core modules
 try:
-    from urllib.request import urlretrieve
+    from urllib.request import urlretrieve, urlcleanup
 except ImportError:  # Python 2
-    from urllib import urlretrieve
+    from urllib import urlretrieve, urlcleanup
 import os
 import requests
 
@@ -67,6 +67,7 @@ def load_urlretrieve(source_url, sink_path):
     sink_path : str
         Where the loaded file is stored.
     """
+    urlcleanup()
     urlretrieve(source_url, sink_path)
 
 
