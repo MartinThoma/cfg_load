@@ -3,6 +3,8 @@
 
 """Test the cfg_load module."""
 
+from __future__ import unicode_literals
+
 # core modules
 try:
     from unittest.mock import patch
@@ -14,6 +16,7 @@ import unittest
 
 # 3rd party modules
 from moto import mock_s3
+import boto3
 
 # internal modules
 import cfg_load
@@ -24,6 +27,14 @@ class MainTest(unittest.TestCase):
 
     @mock_s3
     def test_load_yaml(self):
+        # Set up bucket
+        conn = boto3.resource('s3', region_name='us-east-1')
+        conn.create_bucket(Bucket='ryft-public-sample-data')
+        obj = conn.Object('ryft-public-sample-data',
+                          'ryft-server-0.13.0-rc3_amd64.deb')
+        obj.put(Body=b'foo')
+
+        # Run Test
         path = '../examples/cifar10_baseline.yaml'  # always use slash
         filepath = pkg_resources.resource_filename('cfg_load', path)
         cfg_load.load(filepath)
@@ -64,6 +75,14 @@ class MainTest(unittest.TestCase):
 
     @mock_s3
     def test_configuration_class(self):
+        # Set up bucket
+        conn = boto3.resource('s3', region_name='us-east-1')
+        conn.create_bucket(Bucket='ryft-public-sample-data')
+        obj = conn.Object('ryft-public-sample-data',
+                          'ryft-server-0.13.0-rc3_amd64.deb')
+        obj.put(Body=b'foo')
+
+        # Run Test
         path = '../examples/test.json'  # always use slash
         filepath = pkg_resources.resource_filename('cfg_load', path)
         cfg2 = cfg_load.load(filepath)

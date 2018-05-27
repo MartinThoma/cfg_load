@@ -7,6 +7,10 @@
 import os
 import unittest
 
+# 3rd party modules
+from moto import mock_s3
+import boto3
+
 # internal modules
 import cfg_load.remote
 
@@ -27,7 +31,16 @@ class RemoteTest(unittest.TestCase):
         cfg_load.remote.load(source, sink)
         os.remove(sink)
 
+    @mock_s3
     def test_load_aws_s3(self):
+        # Set up bucket
+        conn = boto3.resource('s3', region_name='us-east-1')
+        conn.create_bucket(Bucket='ryft-public-sample-data')
+        obj = conn.Object('ryft-public-sample-data',
+                          'ryft-server-0.13.0-rc3_amd64.deb')
+        obj.put(Body=b'foo')
+
+        # Run Test
         source = ('s3://ryft-public-sample-data/'
                   'ryft-server-0.13.0-rc3_amd64.deb')
         sink = 'ignore.deb'
