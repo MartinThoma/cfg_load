@@ -22,11 +22,29 @@ import boto3
 import cfg_load
 
 
+def mocked_requests_get(*args, **kwargs):
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+
+        def json(self):
+            return self.json_data
+
+    if args[0] == 'http://someurl.com/test.json':
+        return MockResponse({"key1": "value1"}, 200)
+    elif args[0] == 'http://someotherurl.com/anothertest.json':
+        return MockResponse({"key2": "value2"}, 200)
+
+    return MockResponse(None, 404)
+
+
 class MainTest(unittest.TestCase):
     """Tests for the cfg_load module."""
 
     @mock_s3
-    def test_load_yaml(self):
+    @patch('requests.get', side_effect=mocked_requests_get)
+    def test_load_yaml(self, mock_get):
         # Set up bucket
         conn = boto3.resource('s3', region_name='us-east-1')
         conn.create_bucket(Bucket='ryft-public-sample-data')
@@ -74,7 +92,8 @@ class MainTest(unittest.TestCase):
         self.assertDictEqual(expected, loaded_cfg)
 
     @mock_s3
-    def test_configuration_class(self):
+    @patch('requests.get', side_effect=mocked_requests_get)
+    def test_configuration_class(self, mock_get):
         # Set up bucket
         conn = boto3.resource('s3', region_name='us-east-1')
         conn.create_bucket(Bucket='ryft-public-sample-data')
