@@ -9,6 +9,7 @@ try:
 except ImportError:  # Python 2
     from urllib import urlretrieve
 import os
+import requests
 
 
 def load(source_url, sink_path, policy='load_if_missing'):
@@ -48,7 +49,6 @@ def load_requests(source_url, sink_path):
     sink_path : str
         Where the loaded file is stored.
     """
-    import requests
     r = requests.get(source_url, stream=True)
     if r.status_code == 200:
         with open(sink_path, 'wb') as f:
