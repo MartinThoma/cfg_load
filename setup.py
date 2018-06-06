@@ -1,6 +1,9 @@
 from setuptools import find_packages
 from setuptools import setup
 
+# internal modules
+exec(open('cfg_load/_version.py').read())
+
 tests_require = ['pytest>=3.3.2',
                  'pytest-cov>=2.5.1',
                  'pytest-pep8>=1.0.6',
@@ -10,7 +13,7 @@ aws_require = ['boto3']
 
 config = {
     'name': 'cfg_load',
-    'version': '0.3.1',
+    'version': __version__,
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',
@@ -38,7 +41,8 @@ config = {
                     'Intended Audience :: Information Technology',
                     'License :: OSI Approved :: MIT License',
                     'Natural Language :: English',
-                    'Programming Language :: Python :: 3.5',
+                    'Programming Language :: Python :: 2.7',
+                    'Programming Language :: Python :: 3.6',
                     'Topic :: Software Development',
                     'Topic :: Utilities'],
     'zip_safe': True,

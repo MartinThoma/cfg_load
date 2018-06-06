@@ -19,6 +19,7 @@ import yaml
 import pytz
 
 # internal modules
+from cfg_load._version import __version__
 import cfg_load.paths
 import cfg_load.remote
 
@@ -37,7 +38,7 @@ def load(filepath, load_raw=False):
 
     Returns
     -------
-    config : Configuration(collections.Mapping)
+    config : Configuration
     """
     if filepath.lower().endswith('.yaml') or filepath.lower().endswith('.yml'):
         config = load_yaml(filepath)
