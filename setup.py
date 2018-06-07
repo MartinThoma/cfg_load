@@ -33,6 +33,7 @@ config = {
     'url': 'https://github.com/MartinThoma/cfg_load',
     'license': 'MIT',
     'description': 'Library for loading configuration files',
+    'long_description_content_type': 'text/markdown',
     'long_description': read('README.md'),
     'install_requires': [
         'PyYAML>=3.12',
