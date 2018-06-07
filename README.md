@@ -1,4 +1,6 @@
+[![PyPI version](https://badge.fury.io/py/cfg-load.svg)](https://badge.fury.io/py/cfg-load)
 [![Python Support](https://img.shields.io/pypi/pyversions/cfg_load.svg)](https://pypi.org/project/cfg_load/)
+[![Documentation Status](https://readthedocs.org/projects/cfg_load/badge/?version=latest)](http://cfg-load.readthedocs.io/en/latest/)
 [![Build Status](https://travis-ci.org/MartinThoma/cfg_load.svg?branch=master)](https://travis-ci.org/MartinThoma/cfg_load)
 [![Coverage Status](https://coveralls.io/repos/github/MartinThoma/cfg_load/badge.svg?branch=master)](https://coveralls.io/github/MartinThoma/cfg_load?branch=master)
 

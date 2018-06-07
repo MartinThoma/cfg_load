@@ -1,5 +1,7 @@
 from setuptools import find_packages
 from setuptools import setup
+import io
+import os
 
 # internal modules
 exec(open('cfg_load/_version.py').read())
@@ -10,6 +12,13 @@ tests_require = ['pytest>=3.3.2',
                  'boto3',
                  ]
 aws_require = ['boto3']
+
+
+def read(file_name):
+    """Read a text file and return the content as a string."""
+    with io.open(os.path.join(os.path.dirname(__file__), file_name),
+                 encoding='utf-8') as f:
+        return f.read()
 
 config = {
     'name': 'cfg_load',
@@ -24,7 +33,7 @@ config = {
     'url': 'https://github.com/MartinThoma/cfg_load',
     'license': 'MIT',
     'description': 'Library for loading configuration files',
-    'long_description': ("A tookit for language identification."),
+    'long_description': read('README.md'),
     'install_requires': [
         'PyYAML>=3.12',
         'requests>=2.18.4',
