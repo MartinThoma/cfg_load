@@ -29,6 +29,7 @@ config = {
         'PyYAML>=3.12',
         'requests>=2.18.4',
         'pytz>=2018.4',
+        'mpu>=0.2.0',
     ],
     'tests_require': tests_require,
     'extras_require': {'all': tests_require + aws_require, },

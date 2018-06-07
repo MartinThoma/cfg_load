@@ -4,6 +4,7 @@
 """Core functions of the cfg_load."""
 
 # core modules
+from copy import deepcopy
 from datetime import datetime
 import collections
 import configparser
@@ -15,8 +16,9 @@ import pprint
 import sys
 
 # 3rd party modules
-import yaml
+from mpu.datastructures import dict_merge
 import pytz
+import yaml
 
 # internal modules
 from cfg_load._version import __version__
@@ -290,3 +292,23 @@ class Configuration(collections.Mapping):
             if type(config[key]) is dict:
                 config[key] = self._load_remote(config[key])
         return config
+
+    def update(self, other):
+        """
+        Update this configuration with values of the other configuration.
+
+        Paramters
+        ---------
+        other : Configuration
+
+        Returns
+        -------
+        updated_config : Configuration
+        """
+        this_dict = deepcopy(self._dict)
+        other_dict = deepcopy(other._dict)
+        merged_dict = dict_merge(this_dict,
+                                 other_dict,
+                                 merge_method='take_right_deep')
+        cfg = Configuration(merged_dict, other.meta['cfg_filepath'])
+        return cfg

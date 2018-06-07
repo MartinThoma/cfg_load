@@ -1,0 +1,5 @@
+foo: bar
+only: base
+nested:
+  inner_only_base: 28
+  overwrite: False

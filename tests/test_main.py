@@ -73,6 +73,21 @@ class MainTest(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             cfg_load.load(filepath)
 
+    def test_update(self):
+        path = '../examples/simple_base.yaml'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg_base = cfg_load.load(filepath)
+
+        path = '../examples/simple_user.yaml'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg_update = cfg_load.load(filepath)
+
+        cfg_result = cfg_base.update(cfg_update)
+        cfg_expected = {'foo': 1,
+                        'only': 'base',
+                        'nested': {'overwrite': True, 'inner_only_base': 28}}
+        self.assertDictEqual(cfg_expected, cfg_result._dict)
+
     @patch.dict(os.environ, {'foo': 'foo',
                              'nb_foo': '1337',
                              '_ignore': 'me',
