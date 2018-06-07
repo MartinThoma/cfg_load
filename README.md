@@ -86,6 +86,20 @@ when you compare it to `cfg_load examples/cifar10_baseline.yaml --raw` you can
 also see that it made the paths absolute.
 
 
+## Good Application Practice
+
+```
+import cfg_load
+
+# Load defaults
+base_cfg = cfg_load.load('some/path.yaml')
+
+# Overwrite defaults if user defined it
+user_cfg = cfg_load.load('other/path.yaml')
+user_cfg = base_cfg.update(user_cfg)
+```
+
+
 ## Features
 
 * You load your config like this: `cfg = cfg_load.load('examples/test.json')`
