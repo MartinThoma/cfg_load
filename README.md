@@ -97,6 +97,10 @@ base_cfg = cfg_load.load('some/path.yaml')
 # Overwrite defaults if user defined it
 user_cfg = cfg_load.load('other/path.yaml')
 user_cfg = base_cfg.update(user_cfg)
+
+# Overwrite user default with environment variables
+env_mapping = cfg_load.load('other/env_mapping.yaml')
+cfg = user_cfg.apply_env(env_mapping)
 ```
 
 

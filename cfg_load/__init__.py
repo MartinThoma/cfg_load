@@ -16,7 +16,8 @@ import pprint
 import sys
 
 # 3rd party modules
-from mpu.datastructures import dict_merge
+from mpu.datastructures import dict_merge, set_dict_value
+import mpu
 import pytz
 import yaml
 
@@ -152,7 +153,7 @@ class Configuration(collections.Mapping):
     """
 
     def __init__(self, cfg_dict, cfg_filepath):
-        self._dict = dict(cfg_dict)   # make a copy
+        self._dict = deepcopy(cfg_dict)   # make a copy
         self._hash = None
         self._add_meta(cfg_filepath)
         self.modules = {}
@@ -240,18 +241,22 @@ class Configuration(collections.Mapping):
         config : dict
         """
         keyword = '_module_path'
-        for key in list(config.keys()):
-            if hasattr(key, 'endswith'):
-                if key.startswith('_'):
-                    continue
-                if key.endswith(keyword):
-                    # Handler
-                    sys.path.insert(1, os.path.dirname(config[key]))
-                    loaded_module = imp.load_source('foobar', config[key])
-                    target_key = key[:-len(keyword)]
-                    self.modules[target_key] = loaded_module
-            if type(config[key]) is dict:
-                config[key] = self._load_modules(config[key])
+        if isinstance(config, list):
+            for i, el in enumerate(config):
+                config[i] = self._load_modules(config[i])
+        elif isinstance(config, dict):
+            for key in list(config.keys()):
+                if hasattr(key, 'endswith'):
+                    if key.startswith('_'):
+                        continue
+                    if key.endswith(keyword):
+                        # Handler
+                        sys.path.insert(1, os.path.dirname(config[key]))
+                        loaded_module = imp.load_source('foobar', config[key])
+                        target_key = key[:-len(keyword)]
+                        self.modules[target_key] = loaded_module
+                if type(config[key]) is dict:
+                    config[key] = self._load_modules(config[key])
         return config
 
     def _load_remote(self, config):
@@ -273,24 +278,28 @@ class Configuration(collections.Mapping):
         config : dict
         """
         keyword = '_load_url'
-        for key in list(config.keys()):
-            if hasattr(key, 'endswith'):
-                if key.startswith('_'):
-                    continue
-                if key.endswith(keyword):
-                    # Handler
-                    has_dl_info = ('source_url' in config[key] and
-                                   'sink_path' in config[key])
-                    if not has_dl_info:
-                        logging.warning('The key \'{}\' has not both keys '
-                                        '\'source_url\' and \'sink_path\' '
-                                        .format(key))
-                    else:
-                        source = config[key]['source_url']
-                        sink = config[key]['sink_path']
-                        cfg_load.remote.load(source, sink)
-            if type(config[key]) is dict:
-                config[key] = self._load_remote(config[key])
+        if isinstance(config, list):
+            for i, el in enumerate(config):
+                config[i] = self._load_remote(config[i])
+        elif isinstance(config, dict):
+            for key in list(config.keys()):
+                if hasattr(key, 'endswith'):
+                    if key.startswith('_'):
+                        continue
+                    if key.endswith(keyword):
+                        # Handler
+                        has_dl_info = ('source_url' in config[key] and
+                                       'sink_path' in config[key])
+                        if not has_dl_info:
+                            logging.warning('The key \'{}\' has not both keys '
+                                            '\'source_url\' and \'sink_path\' '
+                                            .format(key))
+                        else:
+                            source = config[key]['source_url']
+                            sink = config[key]['sink_path']
+                            cfg_load.remote.load(source, sink)
+                if type(config[key]) is dict:
+                    config[key] = self._load_remote(config[key])
         return config
 
     def update(self, other):
@@ -312,3 +321,53 @@ class Configuration(collections.Mapping):
                                  merge_method='take_right_deep')
         cfg = Configuration(merged_dict, other.meta['cfg_filepath'])
         return cfg
+
+    def apply_env(self, env_mapping):
+        """
+        Apply environment variables to overwrite the current Configuration.
+
+        The env_mapping has the following structure (in YAML):
+
+        ```
+        - env_name: "AWS_REGION"
+          keys: ["AWS", "REGION"]
+          converter: str
+        - env_name: "AWS_IS_ENABLED"
+          keys: ["AWS", "IS_ENABLED"]
+          converter: bool
+        ```
+
+        If the env_name is not an ENVIRONMENT variable, then nothing is done.
+        If an ENVIRONMENT variable is not defined in env_mapping, nothing is
+        done.
+
+        Known converters:
+
+        * bool
+        * str
+        * int
+        * float
+        * json
+
+        Parameters
+        ----------
+        env_mapping : Configuration
+
+        Returns
+        -------
+        update_config : Configuration
+        """
+        converters = {'str': str,
+                      'bool': mpu.string.str2bool,
+                      'int': int,
+                      'float': float,
+                      'json': json.loads}
+        new_dict = deepcopy(self._dict)
+        for el in env_mapping:
+            env_name = el['env_name']
+            if env_name not in os.environ:
+                continue
+            convert = converters[el['converter']]
+            value = convert(os.environ[env_name])
+            set_dict_value(new_dict, el['keys'], value)
+        return Configuration(new_dict, self.meta['cfg_filepath'])

@@ -88,6 +88,25 @@ class MainTest(unittest.TestCase):
                         'nested': {'overwrite': True, 'inner_only_base': 28}}
         self.assertDictEqual(cfg_expected, cfg_result._dict)
 
+    def test_apply_env(self):
+        path = '../examples/simple_base.yaml'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg_base = cfg_load.load(filepath)
+
+        path = '../examples/env_mapping.yaml'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        env_mapping = cfg_load.load(filepath)
+
+        os.environ['nested_overwrite'] = 'no'
+        cfg = cfg_base.apply_env(env_mapping)
+
+        cfg_expected = {'foo': 'bar',
+                        'only': 'base',
+                        'nested': {'overwrite': False,
+                                   'inner_only_base': 28}}
+
+        self.assertDictEqual(cfg._dict, cfg_expected)
+
     @patch.dict(os.environ, {'foo': 'foo',
                              'nb_foo': '1337',
                              '_ignore': 'me',

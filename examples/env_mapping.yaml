@@ -1,0 +1,9 @@
+- env_name: "AWS_REGION"
+  keys: ["AWS", "REGION"]
+  converter: str
+- env_name: "AWS_IS_ENABLED"
+  keys: ["AWS", "IS_ENABLED"]
+  converter: bool
+- env_name: "nested_overwrite"
+  keys: ["nested", "overwrite"]
+  converter: bool
