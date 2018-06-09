@@ -45,7 +45,7 @@ config = {
     'extras_require': {'all': tests_require + aws_require, },
     'keywords': ['Machine Learning', 'Data Science'],
     'download_url': 'https://github.com/MartinThoma/cfg_load',
-    'classifiers': ['Development Status :: 1 - Planning',
+    'classifiers': ['Development Status :: 3 - Alpha',
                     'Environment :: Console',
                     'Intended Audience :: Developers',
                     'Intended Audience :: Science/Research',
