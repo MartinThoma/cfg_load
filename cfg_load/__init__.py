@@ -57,7 +57,10 @@ def load(filepath, load_raw=False):
         reference_dir = os.path.dirname(filepath)
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
         config = load_env(config)
-        config = Configuration(config, cfg_filepath=filepath)
+        meta = mpu.io.get_file_meta(filepath)
+        meta['parse_datetime'] = datetime.now(pytz.utc)
+        config = Configuration(config,
+                               meta=meta)
     return config
 
 
@@ -150,12 +153,13 @@ class Configuration(collections.Mapping):
     Parameters
     ----------
     cfg_dict : dict
+    meta : dict
     """
 
-    def __init__(self, cfg_dict, cfg_filepath):
+    def __init__(self, cfg_dict, meta):
         self._dict = deepcopy(cfg_dict)   # make a copy
         self._hash = None
-        self._add_meta(cfg_filepath)
+        self._add_meta(meta)
         self.modules = {}
         self._load_modules(self._dict)
         self._load_remote(self._dict)
@@ -189,7 +193,7 @@ class Configuration(collections.Mapping):
         return self
 
     def __str__(self):
-        return 'Configuration({})'.format(self.meta['cfg_filepath'])
+        return 'Configuration({})'.format(self.meta['filepath'])
 
     def __repr__(self):
         return str(self)
@@ -209,21 +213,24 @@ class Configuration(collections.Mapping):
         pp = pprint.PrettyPrinter(indent=indent)
         return pp.pformat(self._dict)
 
-    def _add_meta(self, cfg_filepath):
+    def _add_meta(self, meta):
         """
         Add meta data to configuration.
 
         Parameters
         ----------
         config : dict
-        cfg_filepath : str
+        meta : dict
 
         Returns
         -------
         config : dict
         """
-        self.meta = {'cfg_filepath': os.path.abspath(cfg_filepath),
-                     'parse_datetime': datetime.now(pytz.utc)}
+        assert isinstance(meta, dict), \
+            'type(meta)={}, meta={}'.format(type(meta), meta)
+        assert 'parse_datetime' in meta, 'meta does not contain parse_datetime'
+        self.meta = meta
+        self.meta['filepath'] = os.path.abspath(meta['filepath'])
         return self
 
     def _load_modules(self, config):
@@ -319,7 +326,7 @@ class Configuration(collections.Mapping):
         merged_dict = dict_merge(this_dict,
                                  other_dict,
                                  merge_method='take_right_deep')
-        cfg = Configuration(merged_dict, other.meta['cfg_filepath'])
+        cfg = Configuration(merged_dict, other.meta)
         return cfg
 
     def apply_env(self, env_mapping):
@@ -370,4 +377,4 @@ class Configuration(collections.Mapping):
             convert = converters[el['converter']]
             value = convert(os.environ[env_name])
             set_dict_value(new_dict, el['keys'], value)
-        return Configuration(new_dict, self.meta['cfg_filepath'])
+        return Configuration(new_dict, self.meta)
