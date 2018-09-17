@@ -27,7 +27,7 @@ import cfg_load.paths
 import cfg_load.remote
 
 
-def load(filepath, load_raw=False):
+def load(filepath, load_raw=False, load_remote=True):
     """
     Load a configuration file.
 
@@ -38,6 +38,8 @@ def load(filepath, load_raw=False):
     load_raw : bool, optional (default: False)
         Load only the raw configuration file as a dict,
         without applying any logic to it.
+    load_remote : bool, optional (default: True)
+        Load files stored remotely, e.g. from a webserver or S3
 
     Returns
     -------
@@ -60,7 +62,8 @@ def load(filepath, load_raw=False):
         meta = mpu.io.get_file_meta(filepath)
         meta['parse_datetime'] = datetime.now(pytz.utc)
         config = Configuration(config,
-                               meta=meta)
+                               meta=meta,
+                               load_remote=load_remote)
     return config
 
 
@@ -154,15 +157,17 @@ class Configuration(collections.Mapping):
     ----------
     cfg_dict : dict
     meta : dict
+    load_remote : bool
     """
 
-    def __init__(self, cfg_dict, meta):
+    def __init__(self, cfg_dict, meta, load_remote=True):
         self._dict = deepcopy(cfg_dict)   # make a copy
         self._hash = None
         self._add_meta(meta)
         self.modules = {}
         self._load_modules(self._dict)
-        self._load_remote(self._dict)
+        if load_remote:
+            self._load_remote(self._dict)
 
     def __getitem__(self, key):
         return self._dict[key]
