@@ -67,6 +67,13 @@ class MainTest(unittest.TestCase):
         filepath = pkg_resources.resource_filename('cfg_load', path)
         cfg_load.load(filepath)
 
+    def test_to_dict(self):
+        path = '../examples/test.json'  # always use slash
+        filepath = pkg_resources.resource_filename('cfg_load', path)
+        cfg = cfg_load.load(filepath)
+        dict_ = cfg.to_dict()
+        self.assertIsInstance(dict_, dict)
+
     def test_load_unknown(self):
         path = '../README.md'  # always use slash
         filepath = pkg_resources.resource_filename('cfg_load', path)
@@ -152,4 +159,5 @@ class MainTest(unittest.TestCase):
         self.assertTrue(isinstance(repr(cfg), str))
         self.assertTrue(isinstance(str(cfg), str))
         self.assertTrue(isinstance(cfg.pformat(), str))
+        self.assertTrue(isinstance(cfg.pformat(meta=True), str))
         cfg.set('foo', 'bar')

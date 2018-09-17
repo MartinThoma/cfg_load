@@ -6,8 +6,8 @@
 # core modules
 from copy import deepcopy
 from datetime import datetime
+from six.moves import configparser
 import collections
-import configparser
 import imp
 import json
 import logging
@@ -198,20 +198,30 @@ class Configuration(collections.Mapping):
     def __repr__(self):
         return str(self)
 
-    def pformat(self, indent=4):
+    def pformat(self, indent=4, meta=False):
         """
         Pretty-format the configuration.
 
         Parameters
         ----------
         indent : int
+        meta : bool
+            Print metadata
 
         Returns
         -------
         pretty_format_cfg : str
         """
+        str_ = ''
+        if meta:
+            str_ += 'Configuration:'
+            str_ += 'Meta:'
+            str_ += '\tSource: {}'.format(self.meta['filepath'])
+            str_ += '\tParsed at: {}'.format(self.meta['parse_datetime'])
+            str_ += 'Values:'
         pp = pprint.PrettyPrinter(indent=indent)
-        return pp.pformat(self._dict)
+        str_ += pp.pformat(self._dict)
+        return str_
 
     def _add_meta(self, meta):
         """
@@ -378,3 +388,17 @@ class Configuration(collections.Mapping):
             value = convert(os.environ[env_name])
             set_dict_value(new_dict, el['keys'], value)
         return Configuration(new_dict, self.meta)
+
+    def to_dict(self):
+        """
+        Return a dictionary representation of the configuration.
+
+        This does NOT contain the metadata connected with the configuration.
+        It is discuraged to use this in production as it loses the metadata
+        and guarantees connected with the configuraiton object.
+
+        Returns
+        -------
+        config : dict
+        """
+        return self._dict
