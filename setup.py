@@ -36,7 +36,7 @@ config = {
     'long_description_content_type': 'text/markdown',
     'long_description': read('README.md'),
     'install_requires': [
-        'mpu>=0.6.0',
+        'mpu[io]>=0.14.2',
         'pytz>=2018.4',
         'PyYAML>=3.12',
         'requests>=2.18.4',
