@@ -367,6 +367,7 @@ class Configuration(collections.Mapping):
 
         * bool
         * str
+        * str2str_or_none
         * int
         * float
         * json
@@ -380,6 +381,7 @@ class Configuration(collections.Mapping):
         update_config : Configuration
         """
         converters = {'str': str,
+                      'str2str_or_none': mpu.string.str2str_or_none,
                       'bool': mpu.string.str2bool,
                       'int': int,
                       'float': float,
