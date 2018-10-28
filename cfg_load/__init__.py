@@ -163,6 +163,7 @@ class Configuration(collections.Mapping):
     def __init__(self, cfg_dict, meta, load_remote=True):
         self._dict = deepcopy(cfg_dict)   # make a copy
         self._hash = None
+        meta['load_remote'] = load_remote
         self._add_meta(meta)
         self.modules = {}
         self._load_modules(self._dict)
@@ -198,10 +199,19 @@ class Configuration(collections.Mapping):
         return self
 
     def __str__(self):
-        return 'Configuration({})'.format(self.meta['filepath'])
+        class_name = self.__class__.__name__
+        return ('{class_name}({cfg_filepath})'
+                .format(class_name=class_name,
+                        cfg_filepath=self.meta['filepath']))
 
     def __repr__(self):
-        return str(self)
+        class_name = self.__class__.__name__
+        return ('{class_name}(cfg_dict={cfg_dict}, meta={meta}, '
+                'load_remote={load_remote})'
+                .format(class_name=class_name,
+                        cfg_dict=self._dict,
+                        meta=self.meta,
+                        load_remote=self.meta['load_remote']))
 
     def pformat(self, indent=4, meta=False):
         """
