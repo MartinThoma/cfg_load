@@ -80,7 +80,7 @@ def load_yaml(yaml_filepath):
     config : dict
     """
     with open(yaml_filepath, 'r') as stream:
-        config = yaml.load(stream)
+        config = yaml.safe_load(stream)
     return config
 
 
