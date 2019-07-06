@@ -69,7 +69,7 @@ def load(filepath, load_raw=False, load_remote=True, **kwargs):
     return config
 
 
-def load_yaml(yaml_filepath, safe_load=True):
+def load_yaml(yaml_filepath, safe_load=True, **kwargs):
     """
     Load a YAML file.
 
@@ -80,6 +80,8 @@ def load_yaml(yaml_filepath, safe_load=True):
         This triggers the usage of yaml.safe_load.
         yaml.load can call any Python function and should only be used if the
         source of the configuration file is trusted.
+    **kwargs
+        Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
@@ -87,9 +89,9 @@ def load_yaml(yaml_filepath, safe_load=True):
     """
     with open(yaml_filepath, 'r') as stream:
         if safe_load:
-            config = yaml.safe_load(stream)
+            config = yaml.safe_load(stream, **kwargs)
         else:
-            config = yaml.load(stream)
+            config = yaml.load(stream, **kwargs)
     return config
 
 
