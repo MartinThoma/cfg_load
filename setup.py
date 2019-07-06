@@ -8,7 +8,7 @@ exec(open('cfg_load/_version.py').read())
 
 tests_require = ['pytest>=3.3.2',
                  'pytest-cov>=2.5.1',
-                 'pytest-pep8>=1.0.6',
+                 'pytest-flake8==1.0.4',
                  'boto3',
                  ]
 aws_require = ['boto3']
@@ -38,7 +38,7 @@ config = {
     'install_requires': [
         'mpu[io]>=0.15.0',
         'pytz>=2018.4',
-        'PyYAML>=3.12',
+        'PyYAML>=4.2b1',
         'requests>=2.18.4',
         'six>=1.11.0',
     ],

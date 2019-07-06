@@ -27,7 +27,7 @@ import cfg_load.paths
 import cfg_load.remote
 
 
-def load(filepath, load_raw=False, load_remote=True):
+def load(filepath, load_raw=False, load_remote=True, **kwargs):
     """
     Load a configuration file.
 
@@ -40,17 +40,19 @@ def load(filepath, load_raw=False, load_remote=True):
         without applying any logic to it.
     load_remote : bool, optional (default: True)
         Load files stored remotely, e.g. from a webserver or S3
+    **kwargs
+        Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
     config : Configuration
     """
     if filepath.lower().endswith('.yaml') or filepath.lower().endswith('.yml'):
-        config = load_yaml(filepath)
+        config = load_yaml(filepath, **kwargs)
     elif filepath.lower().endswith('.json'):
-        config = load_json(filepath)
+        config = load_json(filepath, **kwargs)
     elif filepath.lower().endswith('.ini'):
-        config = load_ini(filepath)
+        config = load_ini(filepath, **kwargs)
     else:
         raise NotImplementedError('Extension of the file \'{}\' was not '
                                   'recognized.'
@@ -67,53 +69,64 @@ def load(filepath, load_raw=False, load_remote=True):
     return config
 
 
-def load_yaml(yaml_filepath):
+def load_yaml(yaml_filepath, safe_load=True):
     """
     Load a YAML file.
 
     Parameters
     ----------
     yaml_filepath : str
+    safe_load : bool, optional (default: True)
+        This triggers the usage of yaml.safe_load.
+        yaml.load can call any Python function and should only be used if the
+        source of the configuration file is trusted.
 
     Returns
     -------
     config : dict
     """
     with open(yaml_filepath, 'r') as stream:
-        config = yaml.load(stream)
+        if safe_load:
+            config = yaml.safe_load(stream)
+        else:
+            config = yaml.load(stream)
     return config
 
 
-def load_json(json_filepath):
+def load_json(json_filepath, **kwargs):
     """
     Load a JSON file.
 
     Parameters
     ----------
     json_filepath : str
+    **kwargs
+        Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
     config : dict
     """
     with open(json_filepath, 'r') as stream:
-        config = json.load(stream)
+        config = json.load(stream, **kwargs)
     return config
 
 
-def load_ini(ini_filepath):
+def load_ini(ini_filepath, **kwargs):
     """
     Load a ini file.
 
     Parameters
     ----------
     ini_filepath : str
+    **kwargs
+        Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
     config : OrderedDict
     """
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(**kwargs)
     config.read(ini_filepath)
     return config._sections
 

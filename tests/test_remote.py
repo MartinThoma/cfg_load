@@ -50,11 +50,11 @@ class RemoteTest(unittest.TestCase):
     def test_load_aws_s3_error(self):
         source = 's3://ryft-public-sample-data/'
         sink = 'ignore.deb'
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             cfg_load.remote.load(source, sink)
 
     def test_load_unknown_protocol(self):
         source = ('bt://sample.com/example.zip')
         sink = 'ignore_zip-random.zip'
-        with self.assertRaises(Exception):
+        with self.assertRaises(RuntimeError):
             cfg_load.remote.load(source, sink)
