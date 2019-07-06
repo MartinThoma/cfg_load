@@ -10,6 +10,7 @@ tests_require = ['pytest>=3.3.2',
                  'pytest-cov>=2.5.1',
                  'pytest-flake8==1.0.4',
                  'boto3',
+                 'google-compute-engine',
                  ]
 aws_require = ['boto3']
 
