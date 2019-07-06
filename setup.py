@@ -20,9 +20,10 @@ def read(file_name):
                  encoding='utf-8') as f:
         return f.read()
 
+
 config = {
     'name': 'cfg_load',
-    'version': __version__,
+    'version': __version__,  # noqa
     'author': 'Martin Thoma',
     'author_email': 'info@martin-thoma.de',
     'maintainer': 'Martin Thoma',

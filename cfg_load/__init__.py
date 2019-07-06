@@ -22,7 +22,7 @@ import pytz
 import yaml
 
 # internal modules
-from cfg_load._version import __version__
+from cfg_load._version import __version__  # noqa
 import cfg_load.paths
 import cfg_load.remote
 
