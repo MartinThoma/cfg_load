@@ -86,4 +86,7 @@ def get_parser():
 if __name__ == '__main__':
     args = get_parser().parse_args()
     loaded = cfg_load.load(args.filename, args.raw)
-    print(loaded.pformat())
+    if hasattr(loaded, 'pformat'):
+        print(loaded.pformat())
+    else:
+        print(loaded)
