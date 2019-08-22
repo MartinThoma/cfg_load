@@ -20,13 +20,13 @@ def make_paths_absolute(dir_, cfg):
     -------
     cfg : dict
     """
-    if hasattr(cfg, 'keys'):
+    if hasattr(cfg, "keys"):
         for key in cfg.keys():
-            if hasattr(key, 'endswith'):
-                if key.startswith('_'):
+            if hasattr(key, "endswith"):
+                if key.startswith("_"):
                     continue
-                if key.endswith('_path'):
-                    if cfg[key].startswith('~'):
+                if key.endswith("_path"):
+                    if cfg[key].startswith("~"):
                         cfg[key] = os.path.expanduser(cfg[key])
                     else:
                         cfg[key] = os.path.join(dir_, cfg[key])

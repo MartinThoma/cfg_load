@@ -12,7 +12,7 @@ import os
 import requests
 
 
-def load(source_url, sink_path, policy='load_if_missing'):
+def load(source_url, sink_path, policy="load_if_missing"):
     """
     Load remote files from source_url to sink_path.
 
@@ -23,19 +23,20 @@ def load(source_url, sink_path, policy='load_if_missing'):
     policy : {'load_always', 'load_if_missing'}
     """
     file_exists = os.path.isfile(sink_path)
-    if file_exists and policy == 'load_if_missing':
+    if file_exists and policy == "load_if_missing":
         return
-    known_protocols = [('http://', load_requests),
-                       ('https://', load_requests),
-                       ('ftp://', load_urlretrieve),
-                       ('s3://', load_aws_s3)]
+    known_protocols = [
+        ("http://", load_requests),
+        ("https://", load_requests),
+        ("ftp://", load_urlretrieve),
+        ("s3://", load_aws_s3),
+    ]
     for protocol, handler in known_protocols:
         if source_url.startswith(protocol):
             handler(source_url, sink_path)
             break
     else:
-        raise RuntimeError('Unknown protocol: source_url=\'{}\''
-                           .format(source_url))
+        raise RuntimeError("Unknown protocol: source_url='{}'".format(source_url))
 
 
 def load_requests(source_url, sink_path):
@@ -51,7 +52,7 @@ def load_requests(source_url, sink_path):
     """
     r = requests.get(source_url, stream=True)
     if r.status_code == 200:
-        with open(sink_path, 'wb') as f:
+        with open(sink_path, "wb") as f:
             for chunk in r:
                 f.write(chunk)
 
@@ -86,17 +87,16 @@ def load_aws_s3(source_url, sink_path):
     import boto3
 
     # Parse parts
-    url = source_url[len('s3://'):]
-    bucket, key = url.split('/', 1)
+    url = source_url[len("s3://") :]
+    bucket, key = url.split("/", 1)
     if len(key) == 0:
-        raise ValueError('Key was empty for source_url=\'{}\''
-                         .format(source_url))
+        raise ValueError("Key was empty for source_url='{}'".format(source_url))
 
     # Download file
-    client = boto3.Session().client('s3')
+    client = boto3.Session().client("s3")
     response = client.get_object(Bucket=bucket, Key=key)
 
     # Write file to local file
-    body_string = response['Body'].read()
-    with open(sink_path, 'wb') as f:
+    body_string = response["Body"].read()
+    with open(sink_path, "wb") as f:
         f.write(body_string)

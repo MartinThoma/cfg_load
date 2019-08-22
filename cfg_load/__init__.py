@@ -47,25 +47,23 @@ def load(filepath, load_raw=False, load_remote=True, **kwargs):
     -------
     config : Configuration
     """
-    if filepath.lower().endswith('.yaml') or filepath.lower().endswith('.yml'):
+    if filepath.lower().endswith(".yaml") or filepath.lower().endswith(".yml"):
         config = load_yaml(filepath, **kwargs)
-    elif filepath.lower().endswith('.json'):
+    elif filepath.lower().endswith(".json"):
         config = load_json(filepath, **kwargs)
-    elif filepath.lower().endswith('.ini'):
+    elif filepath.lower().endswith(".ini"):
         config = load_ini(filepath, **kwargs)
     else:
-        raise NotImplementedError('Extension of the file \'{}\' was not '
-                                  'recognized.'
-                                  .format(filepath))
+        raise NotImplementedError(
+            "Extension of the file '{}' was not " "recognized.".format(filepath)
+        )
     if not load_raw:
         reference_dir = os.path.dirname(filepath)
         config = cfg_load.paths.make_paths_absolute(reference_dir, config)
         config = load_env(config)
         meta = mpu.io.get_file_meta(filepath)
-        meta['parse_datetime'] = datetime.now(pytz.utc)
-        config = Configuration(config,
-                               meta=meta,
-                               load_remote=load_remote)
+        meta["parse_datetime"] = datetime.now(pytz.utc)
+        config = Configuration(config, meta=meta, load_remote=load_remote)
     return config
 
 
@@ -87,7 +85,7 @@ def load_yaml(yaml_filepath, safe_load=True, **kwargs):
     -------
     config : dict
     """
-    with open(yaml_filepath, 'r') as stream:
+    with open(yaml_filepath, "r") as stream:
         if safe_load:
             config = yaml.safe_load(stream, **kwargs)
         else:
@@ -109,7 +107,7 @@ def load_json(json_filepath, **kwargs):
     -------
     config : dict
     """
-    with open(json_filepath, 'r') as stream:
+    with open(json_filepath, "r") as stream:
         config = json.load(stream, **kwargs)
     return config
 
@@ -147,7 +145,7 @@ def load_env(config):
     """
     logger = logging.getLogger(__name__)
     for env_name in os.environ:
-        if env_name.startswith('_'):
+        if env_name.startswith("_"):
             continue
         if env_name in config:
             if isinstance(config[env_name], str):
@@ -155,9 +153,11 @@ def load_env(config):
             elif isinstance(config[env_name], (list, dict, float, int, bool)):
                 config[env_name] = json.loads(os.environ[env_name])
             else:
-                logger.warning('Configuration value was {} of type {}, but '
-                               'is overwritten with a string from the '
-                               'environment')
+                logger.warning(
+                    "Configuration value was {} of type {}, but "
+                    "is overwritten with a string from the "
+                    "environment"
+                )
                 config[env_name] = os.environ[env_name]
     return config
 
@@ -176,9 +176,9 @@ class Configuration(collections.Mapping):
     """
 
     def __init__(self, cfg_dict, meta, load_remote=True):
-        self._dict = deepcopy(cfg_dict)   # make a copy
+        self._dict = deepcopy(cfg_dict)  # make a copy
         self._hash = None
-        meta['load_remote'] = load_remote
+        meta["load_remote"] = load_remote
         self._add_meta(meta)
         self.modules = {}
         self._load_modules(self._dict)
@@ -215,18 +215,21 @@ class Configuration(collections.Mapping):
 
     def __str__(self):
         class_name = self.__class__.__name__
-        return ('{class_name}({cfg_filepath})'
-                .format(class_name=class_name,
-                        cfg_filepath=self.meta['filepath']))
+        return "{class_name}({cfg_filepath})".format(
+            class_name=class_name, cfg_filepath=self.meta["filepath"]
+        )
 
     def __repr__(self):
         class_name = self.__class__.__name__
-        return ('{class_name}(cfg_dict={cfg_dict}, meta={meta}, '
-                'load_remote={load_remote})'
-                .format(class_name=class_name,
-                        cfg_dict=self._dict,
-                        meta=self.meta,
-                        load_remote=self.meta['load_remote']))
+        return (
+            "{class_name}(cfg_dict={cfg_dict}, meta={meta}, "
+            "load_remote={load_remote})".format(
+                class_name=class_name,
+                cfg_dict=self._dict,
+                meta=self.meta,
+                load_remote=self.meta["load_remote"],
+            )
+        )
 
     def pformat(self, indent=4, meta=False):
         """
@@ -242,13 +245,13 @@ class Configuration(collections.Mapping):
         -------
         pretty_format_cfg : str
         """
-        str_ = ''
+        str_ = ""
         if meta:
-            str_ += 'Configuration:'
-            str_ += 'Meta:'
-            str_ += '\tSource: {}'.format(self.meta['filepath'])
-            str_ += '\tParsed at: {}'.format(self.meta['parse_datetime'])
-            str_ += 'Values:'
+            str_ += "Configuration:"
+            str_ += "Meta:"
+            str_ += "\tSource: {}".format(self.meta["filepath"])
+            str_ += "\tParsed at: {}".format(self.meta["parse_datetime"])
+            str_ += "Values:"
         pp = pprint.PrettyPrinter(indent=indent)
         str_ += pp.pformat(self._dict)
         return str_
@@ -266,11 +269,10 @@ class Configuration(collections.Mapping):
         -------
         config : dict
         """
-        assert isinstance(meta, dict), \
-            'type(meta)={}, meta={}'.format(type(meta), meta)
-        assert 'parse_datetime' in meta, 'meta does not contain parse_datetime'
+        assert isinstance(meta, dict), "type(meta)={}, meta={}".format(type(meta), meta)
+        assert "parse_datetime" in meta, "meta does not contain parse_datetime"
         self.meta = meta
-        self.meta['filepath'] = os.path.abspath(meta['filepath'])
+        self.meta["filepath"] = os.path.abspath(meta["filepath"])
         return self
 
     def _load_modules(self, config):
@@ -287,20 +289,20 @@ class Configuration(collections.Mapping):
         -------
         config : dict
         """
-        keyword = '_module_path'
+        keyword = "_module_path"
         if isinstance(config, list):
             for i, el in enumerate(config):
                 config[i] = self._load_modules(config[i])
         elif isinstance(config, dict):
             for key in list(config.keys()):
-                if hasattr(key, 'endswith'):
-                    if key.startswith('_'):
+                if hasattr(key, "endswith"):
+                    if key.startswith("_"):
                         continue
                     if key.endswith(keyword):
                         # Handler
                         sys.path.insert(1, os.path.dirname(config[key]))
-                        loaded_module = imp.load_source('foobar', config[key])
-                        target_key = key[:-len(keyword)]
+                        loaded_module = imp.load_source("foobar", config[key])
+                        target_key = key[: -len(keyword)]
                         self.modules[target_key] = loaded_module
                 if type(config[key]) is dict:
                     config[key] = self._load_modules(config[key])
@@ -324,26 +326,28 @@ class Configuration(collections.Mapping):
         -------
         config : dict
         """
-        keyword = '_load_url'
+        keyword = "_load_url"
         if isinstance(config, list):
             for i, el in enumerate(config):
                 config[i] = self._load_remote(config[i])
         elif isinstance(config, dict):
             for key in list(config.keys()):
-                if hasattr(key, 'endswith'):
-                    if key.startswith('_'):
+                if hasattr(key, "endswith"):
+                    if key.startswith("_"):
                         continue
                     if key.endswith(keyword):
                         # Handler
-                        has_dl_info = ('source_url' in config[key] and
-                                       'sink_path' in config[key])
+                        has_dl_info = (
+                            "source_url" in config[key] and "sink_path" in config[key]
+                        )
                         if not has_dl_info:
-                            logging.warning('The key \'{}\' has not both keys '
-                                            '\'source_url\' and \'sink_path\' '
-                                            .format(key))
+                            logging.warning(
+                                "The key '{}' has not both keys "
+                                "'source_url' and 'sink_path' ".format(key)
+                            )
                         else:
-                            source = config[key]['source_url']
-                            sink = config[key]['sink_path']
+                            source = config[key]["source_url"]
+                            sink = config[key]["sink_path"]
                             cfg_load.remote.load(source, sink)
                 if type(config[key]) is dict:
                     config[key] = self._load_remote(config[key])
@@ -363,9 +367,7 @@ class Configuration(collections.Mapping):
         """
         this_dict = deepcopy(self._dict)
         other_dict = deepcopy(other._dict)
-        merged_dict = dict_merge(this_dict,
-                                 other_dict,
-                                 merge_method='take_right_deep')
+        merged_dict = dict_merge(this_dict, other_dict, merge_method="take_right_deep")
         cfg = Configuration(merged_dict, other.meta)
         return cfg
 
@@ -405,20 +407,22 @@ class Configuration(collections.Mapping):
         -------
         update_config : Configuration
         """
-        converters = {'str': str,
-                      'str2str_or_none': mpu.string.str2str_or_none,
-                      'bool': mpu.string.str2bool,
-                      'int': int,
-                      'float': float,
-                      'json': json.loads}
+        converters = {
+            "str": str,
+            "str2str_or_none": mpu.string.str2str_or_none,
+            "bool": mpu.string.str2bool,
+            "int": int,
+            "float": float,
+            "json": json.loads,
+        }
         new_dict = deepcopy(self._dict)
         for el in env_mapping:
-            env_name = el['env_name']
+            env_name = el["env_name"]
             if env_name not in os.environ:
                 continue
-            convert = converters[el['converter']]
+            convert = converters[el["converter"]]
             value = convert(os.environ[env_name])
-            set_dict_value(new_dict, el['keys'], value)
+            set_dict_value(new_dict, el["keys"], value)
         return Configuration(new_dict, self.meta)
 
     def to_dict(self):
