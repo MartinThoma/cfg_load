@@ -83,7 +83,7 @@ def get_parser():
     return parser
 
 
-if __name__ == '__main__':
+def entry_point():
     args = get_parser().parse_args()
     loaded = cfg_load.load(args.filename, args.raw)
     if hasattr(loaded, 'pformat'):

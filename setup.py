@@ -1,3 +1,5 @@
+"""cfg_load is a library for handling configuration."""
+
 from setuptools import find_packages
 from setuptools import setup
 import io
@@ -33,7 +35,7 @@ config = {
     "maintainer": "Martin Thoma",
     "maintainer_email": "info@martin-thoma.de",
     "packages": find_packages(),
-    "scripts": ["bin/cfg_load"],
+    "entry_points": {"console_scripts": ["cfg_load=cfg_load.cli:entry_point"]},
     "platforms": ["Linux"],
     "url": "https://github.com/MartinThoma/cfg_load",
     "license": "MIT",
