@@ -3,16 +3,16 @@
 
 """Test the cfg_load.paths module."""
 
-# core modules
+# Core Library
 import os
 import unittest
 
-# 3rd party modules
-from moto import mock_s3
+# Third party
 import boto3
 import pytest
+from moto import mock_s3
 
-# internal modules
+# First party
 import cfg_load.remote
 
 

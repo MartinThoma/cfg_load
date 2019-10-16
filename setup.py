@@ -1,12 +1,11 @@
 """cfg_load is a library for handling configuration."""
 
-from setuptools import find_packages
-from setuptools import setup
+# Core Library
 import io
 import os
 
-# internal modules
-exec(open("cfg_load/_version.py").read())
+# Third party
+from setuptools import find_packages, setup
 
 tests_require = [
     "boto3",
@@ -29,7 +28,7 @@ def read(file_name):
 
 config = {
     "name": "cfg_load",
-    "version": __version__,  # noqa
+    "version": "0.9.0",  # keep in sync with cfg_load/_version.py
     "author": "Martin Thoma",
     "author_email": "info@martin-thoma.de",
     "maintainer": "Martin Thoma",

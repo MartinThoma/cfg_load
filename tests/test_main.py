@@ -5,21 +5,22 @@
 
 from __future__ import unicode_literals
 
-# core modules
+# Core Library
+import os
+import unittest
+
+# Third party
+import boto3
+import pkg_resources
+from moto import mock_s3
+
+# First party
+import cfg_load
+
 try:
     from unittest.mock import patch
 except ImportError:  # Python 2.7
     from mock import patch
-import os
-import pkg_resources
-import unittest
-
-# 3rd party modules
-from moto import mock_s3
-import boto3
-
-# internal modules
-import cfg_load
 
 
 def mocked_requests_get(*args, **kwargs):

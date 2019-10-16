@@ -3,10 +3,7 @@
 
 """Core functions of the cfg_load."""
 
-# core modules
-from copy import deepcopy
-from datetime import datetime
-from six.moves import configparser
+# Core Library
 import collections
 import imp
 import json
@@ -14,17 +11,20 @@ import logging
 import os
 import pprint
 import sys
+from copy import deepcopy
+from datetime import datetime
 
-# 3rd party modules
-from mpu.datastructures import dict_merge, set_dict_value
+# Third party
 import mpu
 import pytz
 import yaml
+from mpu.datastructures import dict_merge, set_dict_value
+from six.moves import configparser
 
-# internal modules
-from cfg_load._version import __version__  # noqa
+# First party
 import cfg_load.paths
 import cfg_load.remote
+from cfg_load._version import __version__  # noqa
 
 
 def load(filepath, load_raw=False, load_remote=True, **kwargs):

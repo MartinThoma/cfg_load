@@ -3,7 +3,7 @@
 
 """Path manipulation functions."""
 
-# core modules
+# Core Library
 import os
 
 

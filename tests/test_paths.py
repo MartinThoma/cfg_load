@@ -3,17 +3,17 @@
 
 """Test the cfg_load.paths module."""
 
-# core modules
+# Core Library
 import unittest
 from copy import deepcopy
+
+# First party
+import cfg_load.paths
 
 try:
     from unittest.mock import patch
 except ImportError:  # Python 2.7
     from mock import patch
-
-# internal modules
-import cfg_load.paths
 
 
 class PathsTest(unittest.TestCase):
