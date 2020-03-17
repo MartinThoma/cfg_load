@@ -6,14 +6,10 @@
 # Core Library
 import unittest
 from copy import deepcopy
+from unittest.mock import patch
 
 # First party
 import cfg_load.paths
-
-try:
-    from unittest.mock import patch
-except ImportError:  # Python 2.7
-    from mock import patch
 
 
 class PathsTest(unittest.TestCase):

@@ -3,13 +3,9 @@
 
 """Load files from remote locations."""
 
-# core modules
-try:
-    from urllib.request import urlretrieve, urlcleanup
-except ImportError:  # Python 2
-    from urllib import urlretrieve, urlcleanup
 # Core Library
 import os
+from urllib.request import urlcleanup, urlretrieve
 
 # Third party
 import requests
