@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # cfg_load documentation build configuration file, created by
 # sphinx-quickstart on Wed Jun  6 21:34:30 2018.

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Core functions of the cfg_load."""
 
@@ -85,7 +84,7 @@ def load_yaml(yaml_filepath, safe_load=True, **kwargs):
     -------
     config : dict
     """
-    with open(yaml_filepath, "r") as stream:
+    with open(yaml_filepath) as stream:
         if safe_load:
             config = yaml.safe_load(stream, **kwargs)
         else:
@@ -107,7 +106,7 @@ def load_json(json_filepath, **kwargs):
     -------
     config : dict
     """
-    with open(json_filepath, "r") as stream:
+    with open(json_filepath) as stream:
         config = json.load(stream, **kwargs)
     return config
 

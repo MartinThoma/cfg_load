@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Load files from remote locations."""
 
@@ -35,7 +34,7 @@ def load(source_url, sink_path, policy="load_if_missing"):
             handler(source_url, sink_path)
             break
     else:
-        raise RuntimeError("Unknown protocol: source_url='{}'".format(source_url))
+        raise RuntimeError(f"Unknown protocol: source_url='{source_url}'")
 
 
 def load_requests(source_url, sink_path):
@@ -89,7 +88,7 @@ def load_aws_s3(source_url, sink_path):
     url = source_url[len("s3://") :]
     bucket, key = url.split("/", 1)
     if len(key) == 0:
-        raise ValueError("Key was empty for source_url='{}'".format(source_url))
+        raise ValueError(f"Key was empty for source_url='{source_url}'")
 
     # Download file
     client = boto3.Session().client("s3")

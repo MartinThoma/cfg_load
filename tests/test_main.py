@@ -1,15 +1,13 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Test the cfg_load module."""
 
-from __future__ import unicode_literals
 
 # Core Library
 import os
 from io import StringIO
-from urllib import request
 from unittest.mock import patch
+from urllib import request
 
 # Third party
 import boto3
@@ -29,7 +27,7 @@ class MockUrllibResponse:
 
 
 def mocked_requests_get(*args, **kwargs):
-    class MockResponse(object):
+    class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
             self.status_code = status_code
@@ -56,7 +54,7 @@ def mocked_urlopen(monkeypatch):
     def mocked(url, data):
         calls.append((url, data))
 
-        class MockFile(StringIO, object):
+        class MockFile(StringIO):
             """This is a work around for the fact that StringIO is a slotted class and
             doesn"t have a name attribute.
             """
@@ -64,7 +62,7 @@ def mocked_urlopen(monkeypatch):
             name = None
 
             def __init__(self, name="defaultname.txt", buffer_=None):
-                super(MockFile, self).__init__(buffer_)
+                super().__init__(buffer_)
                 self.name = name
                 self.i = 0
 
