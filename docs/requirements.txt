@@ -1,3 +1,5 @@
 sphinx_rtd_theme>=0.3.1
 cfg_load
 mpu
+
+sphinx>=3.0.4 # not directly required, pinned by Snyk to avoid a vulnerability
