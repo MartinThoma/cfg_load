@@ -8,8 +8,10 @@ tests_require = [
     "google-compute-engine",
     "pytest-black",
     "pytest-cov>=2.5.1",
+    "flake8==3.7.9",  # https://github.com/tholo/pytest-flake8/issues/66
     "pytest-flake8==1.0.4",
     "pytest>=3.3.2",
+    "requests_mock",
 ]
 aws_require = ["boto3"]
 
