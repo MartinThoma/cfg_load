@@ -10,7 +10,7 @@ from urllib.request import urlcleanup, urlretrieve
 import requests
 
 
-def load(source_url, sink_path, policy="load_if_missing"):
+def load(source_url: str, sink_path: str, policy: str = "load_if_missing") -> None:
     """
     Load remote files from source_url to sink_path.
 
@@ -37,7 +37,7 @@ def load(source_url, sink_path, policy="load_if_missing"):
         raise RuntimeError(f"Unknown protocol: source_url='{source_url}'")
 
 
-def load_requests(source_url, sink_path):
+def load_requests(source_url: str, sink_path: str) -> None:
     """
     Load a file from an URL (e.g. http).
 
@@ -55,7 +55,7 @@ def load_requests(source_url, sink_path):
                 f.write(chunk)
 
 
-def load_urlretrieve(source_url, sink_path):
+def load_urlretrieve(source_url: str, sink_path: str) -> None:
     """
     Load a file from an URL with urlretrieve.
 
@@ -70,7 +70,7 @@ def load_urlretrieve(source_url, sink_path):
     urlretrieve(source_url, sink_path)
 
 
-def load_aws_s3(source_url, sink_path):
+def load_aws_s3(source_url: str, sink_path: str) -> None:
     """
     Load a file from AWS S3.
 

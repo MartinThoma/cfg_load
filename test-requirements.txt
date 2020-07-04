@@ -1,4 +1,0 @@
-moto==1.3.3
-pandas
-simplejson
-boto3==1.7.84

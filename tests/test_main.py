@@ -104,45 +104,45 @@ def test_load_yaml(monkeypatch, requests_mock, mocked_urlopen):
     obj.put(Body=b"foo")
 
     # Run Test
-    path = "../examples/cifar10_baseline.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/cifar10_baseline.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_load.load(filepath)
 
 
 def test_load_ini():
-    path = "../examples/db_cfg.ini"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/db_cfg.ini"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_load.load(filepath)
 
 
 def test_load_json():
-    path = "../examples/test.json"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/test.json"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_load.load(filepath)
 
 
 def test_to_dict():
-    path = "../examples/test.json"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/test.json"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg = cfg_load.load(filepath)
     dict_ = cfg.to_dict()
     assert isinstance(dict_, dict)
 
 
 def test_load_unknown():
-    path = "../README.md"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "README.md"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     with pytest.raises(NotImplementedError):
         cfg_load.load(filepath)
 
 
 def test_update():
-    path = "../examples/simple_base.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/simple_base.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_base = cfg_load.load(filepath)
 
-    path = "../examples/simple_user.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/simple_user.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_update = cfg_load.load(filepath)
 
     cfg_result = cfg_base.update(cfg_update)
@@ -155,12 +155,12 @@ def test_update():
 
 
 def test_apply_env():
-    path = "../examples/simple_base.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/simple_base.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg_base = cfg_load.load(filepath)
 
-    path = "../examples/env_mapping.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/env_mapping.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     env_mapping = cfg_load.load(filepath)
 
     os.environ["nested_overwrite"] = "no"
@@ -209,12 +209,12 @@ def test_configuration_class(monkeypatch):
     obj.put(Body=b"foo")
 
     # Run Test
-    path = "../examples/test.json"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/test.json"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg2 = cfg_load.load(filepath)
 
-    path = "../examples/cifar10_baseline.yaml"  # always use slash
-    filepath = pkg_resources.resource_filename("cfg_load", path)
+    path = "examples/cifar10_baseline.yaml"  # always use slash
+    filepath = pkg_resources.resource_filename(__name__, path)
     cfg = cfg_load.load(filepath)
     assert cfg["umlautüößhere"] == "wörks"
     assert len(cfg) == 11

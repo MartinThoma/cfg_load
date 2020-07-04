@@ -4,6 +4,8 @@
 
 # Core Library
 import logging.config
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+from typing import cast
 
 # First party
 import cfg_load
@@ -54,10 +56,8 @@ config = {
 logging.config.dictConfig(config["LOGGING"])
 
 
-def get_parser():
+def get_parser() -> ArgumentParser:
     """Show what cfg_load.load() returns."""
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
     parser = ArgumentParser(
         description=__doc__, formatter_class=ArgumentDefaultsHelpFormatter
     )
@@ -74,9 +74,9 @@ def get_parser():
     return parser
 
 
-def entry_point():
+def entry_point() -> None:
     args = get_parser().parse_args()
-    loaded = cfg_load.load(args.filename, args.raw)
+    loaded = cast(cfg_load.Configuration, cfg_load.load(args.filename, args.raw))
     if hasattr(loaded, "pformat"):
         print(loaded.pformat())
     else:

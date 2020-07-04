@@ -45,6 +45,7 @@ def test_load_aws_s3():
     os.remove(sink)
 
 
+@mock_s3
 def test_load_aws_s3_error():
     source = "s3://ryft-public-sample-data/"
     sink = "ignore.deb"

@@ -14,7 +14,7 @@ does the job.
 
 The recommended way to install cfg_load is:
 
-```
+```bash
 $ pip install cfg_load[all] --user
 ```
 
@@ -22,7 +22,7 @@ Note: You might have to escape `[` and `]` in some shells like ZSH.
 
 If you want the latest version:
 
-```
+```bash
 $ git clone https://github.com/MartinThoma/cfg_load.git; cd cfg_load
 $ pip instell -e .[all] --user
 ```
@@ -33,17 +33,17 @@ $ pip instell -e .[all] --user
 `cfg_load` is intended to be used as a library. In your code, it will mostly
 be used like this:
 
-```
+```python
 import cfg_load
 
-config = cfg_load.load('some/path.yaml')
+config = cfg_load.load("some/path.yaml")
 ```
 
 In order to check if it is doing what you expect, you can use it as a command
 line tool:
 
-```
-$ cfg_load examples/cifar10_baseline.yaml
+```bash
+$ cfg_load tests/examples/cifar10_baseline.yaml
 
 {   'dataset': {   'script_path': '/home/moose/GitHub/cfg_loader/datasets/cifar10_keras.py'},
     'evaluate': {   'augmentation_factor': 32,
@@ -88,18 +88,18 @@ also see that it made the paths absolute.
 
 ## Good Application Practice
 
-```
+```python
 import cfg_load
 
 # Load defaults
-base_cfg = cfg_load.load('some/path.yaml')
+base_cfg = cfg_load.load("some/path.yaml")
 
 # Overwrite defaults if user defined it
-user_cfg = cfg_load.load('other/path.yaml')
+user_cfg = cfg_load.load("other/path.yaml")
 user_cfg = base_cfg.update(user_cfg)
 
 # Overwrite user default with environment variables
-env_mapping = cfg_load.load('other/env_mapping.yaml')
+env_mapping = cfg_load.load("other/env_mapping.yaml")
 cfg = user_cfg.apply_env(env_mapping)
 ```
 

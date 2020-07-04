@@ -4,20 +4,21 @@
 
 # Core Library
 import os
+from typing import Dict
 
 
-def make_paths_absolute(dir_, cfg):
+def make_paths_absolute(dir_: str, cfg: Dict) -> Dict:
     """
     Make all values for keys ending with `_path` absolute to dir_.
 
     Parameters
     ----------
     dir_ : str
-    cfg : dict
+    cfg : Dict
 
     Returns
     -------
-    cfg : dict
+    cfg : Dict
     """
     if hasattr(cfg, "keys"):
         for key in cfg.keys():

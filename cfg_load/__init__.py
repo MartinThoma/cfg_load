@@ -4,7 +4,7 @@
 
 # Core Library
 import collections
-import imp
+import importlib.util
 import json
 import logging
 import os
@@ -12,6 +12,7 @@ import pprint
 import sys
 from copy import deepcopy
 from datetime import datetime
+from typing import Any, Dict, List, Union
 
 # Third party
 import mpu
@@ -26,7 +27,9 @@ import cfg_load.remote
 from cfg_load._version import __version__  # noqa
 
 
-def load(filepath, load_raw=False, load_remote=True, **kwargs):
+def load(
+    filepath: str, load_raw: bool = False, load_remote: bool = True, **kwargs: Any
+) -> Union["Configuration", Dict]:
     """
     Load a configuration file.
 
@@ -47,26 +50,26 @@ def load(filepath, load_raw=False, load_remote=True, **kwargs):
     config : Configuration
     """
     if filepath.lower().endswith(".yaml") or filepath.lower().endswith(".yml"):
-        config = load_yaml(filepath, **kwargs)
+        config_dict = load_yaml(filepath, **kwargs)
     elif filepath.lower().endswith(".json"):
-        config = load_json(filepath, **kwargs)
+        config_dict = load_json(filepath, **kwargs)
     elif filepath.lower().endswith(".ini"):
-        config = load_ini(filepath, **kwargs)
+        config_dict = load_ini(filepath, **kwargs)
     else:
         raise NotImplementedError(
             "Extension of the file '{}' was not " "recognized.".format(filepath)
         )
     if not load_raw:
         reference_dir = os.path.dirname(filepath)
-        config = cfg_load.paths.make_paths_absolute(reference_dir, config)
-        config = load_env(config)
+        config_dict = cfg_load.paths.make_paths_absolute(reference_dir, config_dict)
+        config_dict = load_env(config_dict)
         meta = mpu.io.get_file_meta(filepath)
         meta["parse_datetime"] = datetime.now(pytz.utc)
-        config = Configuration(config, meta=meta, load_remote=load_remote)
+        config = Configuration(config_dict, meta=meta, load_remote=load_remote)
     return config
 
 
-def load_yaml(yaml_filepath, safe_load=True, **kwargs):
+def load_yaml(yaml_filepath: str, safe_load: bool = True, **kwargs: Any) -> Dict:
     """
     Load a YAML file.
 
@@ -77,48 +80,48 @@ def load_yaml(yaml_filepath, safe_load=True, **kwargs):
         This triggers the usage of yaml.safe_load.
         yaml.load can call any Python function and should only be used if the
         source of the configuration file is trusted.
-    **kwargs
+    **kwargs : Any
         Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
-    config : dict
+    config : Dict
     """
     with open(yaml_filepath) as stream:
         if safe_load:
-            config = yaml.safe_load(stream, **kwargs)
+            config = yaml.safe_load(stream)
         else:
             config = yaml.load(stream, **kwargs)
     return config
 
 
-def load_json(json_filepath, **kwargs):
+def load_json(json_filepath: str, **kwargs: Any) -> Dict:
     """
     Load a JSON file.
 
     Parameters
     ----------
     json_filepath : str
-    **kwargs
+    **kwargs : Any
         Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
     -------
-    config : dict
+    config : Dict
     """
     with open(json_filepath) as stream:
         config = json.load(stream, **kwargs)
     return config
 
 
-def load_ini(ini_filepath, **kwargs):
+def load_ini(ini_filepath: str, **kwargs: Any) -> collections.OrderedDict:
     """
     Load a ini file.
 
     Parameters
     ----------
     ini_filepath : str
-    **kwargs
+    **kwargs : Any
         Arbitrary keyword arguments which get passed to the loader functions.
 
     Returns
@@ -127,20 +130,21 @@ def load_ini(ini_filepath, **kwargs):
     """
     config = configparser.ConfigParser(**kwargs)
     config.read(ini_filepath)
-    return config._sections
+    # This is not so nice as it accesses a private property of the INI parser
+    return config._sections  # type: ignore
 
 
-def load_env(config):
+def load_env(config: Dict) -> Dict:
     """
     Load environment variables in config.
 
     Parameters
     ----------
-    config : dict
+    config : Dict
 
     Returns
     -------
-    config : dict
+    config : Dict
     """
     logger = logging.getLogger(__name__)
     for env_name in os.environ:
@@ -161,7 +165,7 @@ def load_env(config):
     return config
 
 
-class Configuration(collections.Mapping):
+class Configuration(collections.abc.Mapping):
     """
     Configuration class.
 
@@ -169,34 +173,34 @@ class Configuration(collections.Mapping):
 
     Parameters
     ----------
-    cfg_dict : dict
-    meta : dict
+    cfg_dict : Dict
+    meta : Dict
     load_remote : bool
     """
 
-    def __init__(self, cfg_dict, meta, load_remote=True):
+    def __init__(self, cfg_dict: Dict, meta: Dict, load_remote: bool = True):
         self._dict = deepcopy(cfg_dict)  # make a copy
         self._hash = None
         meta["load_remote"] = load_remote
         self._add_meta(meta)
-        self.modules = {}
+        self.modules: Dict = {}
         self._load_modules(self._dict)
         if load_remote:
             self._load_remote(self._dict)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Any) -> Any:
         return self._dict[key]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._dict)
 
-    def __iter__(self):
+    def __iter__(self) -> Any:
         return iter(self._dict)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return self._dict == other._dict
 
-    def set(self, key, value):
+    def set(self, key: str, value: Any) -> "Configuration":
         """
         Set a value in the configuration.
 
@@ -212,13 +216,13 @@ class Configuration(collections.Mapping):
         self._dict[key] = value
         return self
 
-    def __str__(self):
+    def __str__(self) -> str:
         class_name = self.__class__.__name__
         return "{class_name}({cfg_filepath})".format(
             class_name=class_name, cfg_filepath=self.meta["filepath"]
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         class_name = self.__class__.__name__
         return (
             "{class_name}(cfg_dict={cfg_dict}, meta={meta}, "
@@ -230,7 +234,7 @@ class Configuration(collections.Mapping):
             )
         )
 
-    def pformat(self, indent=4, meta=False):
+    def pformat(self, indent: int = 4, meta: bool = False) -> str:
         """
         Pretty-format the configuration.
 
@@ -255,18 +259,17 @@ class Configuration(collections.Mapping):
         str_ += pp.pformat(self._dict)
         return str_
 
-    def _add_meta(self, meta):
+    def _add_meta(self, meta: Dict) -> "Configuration":
         """
         Add meta data to configuration.
 
         Parameters
         ----------
-        config : dict
-        meta : dict
+        meta : Dict
 
         Returns
         -------
-        config : dict
+        config : Configuration
         """
         assert isinstance(meta, dict), "type(meta)={}, meta={}".format(type(meta), meta)
         assert "parse_datetime" in meta, "meta does not contain parse_datetime"
@@ -274,7 +277,7 @@ class Configuration(collections.Mapping):
         self.meta["filepath"] = os.path.abspath(meta["filepath"])
         return self
 
-    def _load_modules(self, config):
+    def _load_modules(self, config: Dict) -> Dict:
         """
         Every key [SOMETHING]_module_path is loaded as a module.
 
@@ -282,11 +285,11 @@ class Configuration(collections.Mapping):
 
         Parameters
         ----------
-        config : dict
+        config : Dict
 
         Returns
         -------
-        config : dict
+        config : Dict
         """
         keyword = "_module_path"
         if isinstance(config, list):
@@ -300,14 +303,19 @@ class Configuration(collections.Mapping):
                     if key.endswith(keyword):
                         # Handler
                         sys.path.insert(1, os.path.dirname(config[key]))
-                        loaded_module = imp.load_source("foobar", config[key])
+                        spec = importlib.util.spec_from_file_location(
+                            "foobar", config[key]
+                        )
+                        loaded_module = importlib.util.module_from_spec(spec)
+                        # if spec is not None:
+                        # spec.loader.exec_module(loaded_module)
                         target_key = key[: -len(keyword)]
                         self.modules[target_key] = loaded_module
                 if type(config[key]) is dict:
                     config[key] = self._load_modules(config[key])
         return config
 
-    def _load_remote(self, config):
+    def _load_remote(self, config: Dict) -> Dict:
         """
         Load remote paths.
 
@@ -319,11 +327,11 @@ class Configuration(collections.Mapping):
 
         Parameters
         ----------
-        config : dict
+        config : Dict
 
         Returns
         -------
-        config : dict
+        config : Dict
         """
         keyword = "_load_url"
         if isinstance(config, list):
@@ -352,7 +360,7 @@ class Configuration(collections.Mapping):
                     config[key] = self._load_remote(config[key])
         return config
 
-    def update(self, other):
+    def update(self, other: "Configuration") -> "Configuration":
         """
         Update this configuration with values of the other configuration.
 
@@ -370,7 +378,7 @@ class Configuration(collections.Mapping):
         cfg = Configuration(merged_dict, other.meta)
         return cfg
 
-    def apply_env(self, env_mapping):
+    def apply_env(self, env_mapping: List[Dict[str, Any]]) -> "Configuration":
         """
         Apply environment variables to overwrite the current Configuration.
 
@@ -424,7 +432,7 @@ class Configuration(collections.Mapping):
             set_dict_value(new_dict, el["keys"], value)
         return Configuration(new_dict, self.meta)
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         """
         Return a dictionary representation of the configuration.
 

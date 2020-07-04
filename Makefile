@@ -13,4 +13,4 @@ test:
 
 upload:
 	make clean
-	python3 setup.py sdist bdist_wheel && twine upload dist/*
+	python setup.py sdist bdist_wheel && twine upload dist/*
