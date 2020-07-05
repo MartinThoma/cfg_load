@@ -7,15 +7,29 @@ import os
 
 # Third party
 import boto3
+import pkg_resources
 import pytest
+import responses
 from moto import mock_s3
 
 # First party
 import cfg_load.remote
 
 
+@responses.activate
 def test_load_http(requests_mock):
-    source = "https://martin-thoma.com/images/2017/02/Martin_Thoma_web_thumb.jpg"
+    filepath = pkg_resources.resource_filename(__name__, "examples/image.jpg")
+    with open(filepath, "rb") as img1:
+        responses.add(
+            responses.GET,
+            "https://example.com/example-image.jpg",
+            body=img1.read(),
+            status=200,
+            content_type="image/jpeg",
+            stream=True,
+        )
+
+    source = "https://example.com/example-image.jpg"
     requests_mock.get(source, text="data")
     sink = "ignore_image-random.jpg"
     cfg_load.remote.load(source, sink)

@@ -75,6 +75,7 @@ def get_parser() -> ArgumentParser:
 
 
 def entry_point() -> None:
+    """Use this as an entry point for the CLI."""
     args = get_parser().parse_args()
     loaded = cast(cfg_load.Configuration, cfg_load.load(args.filename, args.raw))
     if hasattr(loaded, "pformat"):

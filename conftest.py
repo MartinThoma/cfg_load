@@ -1,3 +1,5 @@
+"""Global configuration for pytest."""
+
 # Core Library
 import logging
 from typing import Dict

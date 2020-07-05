@@ -8,6 +8,7 @@ from urllib.request import urlcleanup, urlretrieve
 
 # Third party
 import requests
+import mypy_boto3_s3 as s3
 
 
 def load(source_url: str, sink_path: str, policy: str = "load_if_missing") -> None:
@@ -91,7 +92,7 @@ def load_aws_s3(source_url: str, sink_path: str) -> None:
         raise ValueError(f"Key was empty for source_url='{source_url}'")
 
     # Download file
-    client = boto3.Session().client("s3")
+    client: s3.S3Client = boto3.client("s3")
     response = client.get_object(Bucket=bucket, Key=key)
 
     # Write file to local file
