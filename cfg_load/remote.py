@@ -7,8 +7,8 @@ import os
 from urllib.request import urlcleanup, urlretrieve
 
 # Third party
-import requests
 import mypy_boto3_s3 as s3
+import requests
 
 
 def load(source_url: str, sink_path: str, policy: str = "load_if_missing") -> None:
@@ -83,6 +83,7 @@ def load_aws_s3(source_url: str, sink_path: str) -> None:
         Where the loaded file is stored.
     """
     # Import here to make this dependency optional
+    # Third party
     import boto3
 
     # Parse parts

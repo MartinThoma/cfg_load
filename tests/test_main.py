@@ -79,6 +79,7 @@ def mocked_urlopen(monkeypatch):
 
         return MockFile()
 
+    # Core Library
     import urllib.request
 
     monkeypatch.setattr(urllib.request, "urlopen", mocked)
