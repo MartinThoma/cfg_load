@@ -1,5 +1,6 @@
 sphinx_rtd_theme>=0.3.1
 cfg_load
 mpu
+boto3-stubs[s3]
 
 sphinx>=3.0.4 # not directly required, pinned by Snyk to avoid a vulnerability
