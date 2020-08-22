@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """Show what cfg_load.load() returns."""
 
 # Core Library
@@ -69,7 +67,7 @@ def get_parser() -> ArgumentParser:
         action="store_true",
         dest="raw",
         default=False,
-        help="only get the raw file; do not execute anything " "else",
+        help="only get the raw file; do not execute anything else",
     )
     return parser
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """Path manipulation functions."""
 
 # Core Library

@@ -61,7 +61,8 @@ pytest-cov==2.10.0        # via -r requirements-dev.in
 pytest-flake8==1.0.6      # via -r requirements-dev.in
 pytest-mccabe==1.0        # via -r requirements-dev.in
 pytest-mypy==0.6.2        # via -r requirements-dev.in
-pytest==5.4.3             # via -r requirements-dev.in, pytest-black, pytest-cov, pytest-flake8, pytest-mccabe, pytest-mypy
+pytest-timeout==1.4.2     # via -r requirements-dev.in
+pytest==5.4.3             # via -r requirements-dev.in, pytest-black, pytest-cov, pytest-flake8, pytest-mccabe, pytest-mypy, pytest-timeout
 python-dateutil==2.6.1    # via botocore, moto, pandas
 pytz==2020.1              # via moto, pandas
 pyyaml==5.3.1             # via pyaml

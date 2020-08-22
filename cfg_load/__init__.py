@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """Core functions of the cfg_load."""
 
 # Core Library
@@ -57,7 +55,7 @@ def load(
         config_dict = load_ini(filepath, **kwargs)
     else:
         raise NotImplementedError(
-            "Extension of the file '{}' was not " "recognized.".format(filepath)
+            f"Extension of the file '{filepath}' was not recognized."
         )
     if not load_raw:
         reference_dir = os.path.dirname(filepath)
@@ -91,7 +89,7 @@ def load_yaml(yaml_filepath: str, safe_load: bool = True, **kwargs: Any) -> Dict
         if safe_load:
             config = yaml.safe_load(stream)
         else:
-            config = yaml.load(stream, **kwargs)
+            config = yaml.load(stream, **kwargs)  # noqa
     return config
 
 
@@ -157,9 +155,9 @@ def load_env(config: Dict) -> Dict:
                 config[env_name] = json.loads(os.environ[env_name])
             else:
                 logger.warning(
-                    "Configuration value was {} of type {}, but "
-                    "is overwritten with a string from the "
-                    "environment"
+                    f"Configuration value of {env_name} was "
+                    f"{config[env_name]} of type {type(config[env_name])}, "
+                    "but is overwritten with a string from the environment"
                 )
                 config[env_name] = os.environ[env_name]
     return config
@@ -200,7 +198,7 @@ class Configuration(collections.abc.Mapping):
     def __eq__(self, other: Any) -> bool:
         return self._dict == other._dict
 
-    def set(self, key: str, value: Any) -> "Configuration":
+    def set(self, key: str, value: Any) -> "Configuration":  # noqa
         """
         Set a value in the configuration.
 
@@ -252,8 +250,8 @@ class Configuration(collections.abc.Mapping):
         if meta:
             str_ += "Configuration:"
             str_ += "Meta:"
-            str_ += "\tSource: {}".format(self.meta["filepath"])
-            str_ += "\tParsed at: {}".format(self.meta["parse_datetime"])
+            str_ += f"\tSource: {self.meta['filepath']}"
+            str_ += f"\tParsed at: {self.meta['parse_datetime']}"
             str_ += "Values:"
         pp = pprint.PrettyPrinter(indent=indent)
         str_ += pp.pformat(self._dict)
@@ -271,7 +269,7 @@ class Configuration(collections.abc.Mapping):
         -------
         config : Configuration
         """
-        assert isinstance(meta, dict), "type(meta)={}, meta={}".format(type(meta), meta)
+        assert isinstance(meta, dict), f"type(meta)={type(meta)}, meta={meta}"
         assert "parse_datetime" in meta, "meta does not contain parse_datetime"
         self.meta = meta
         self.meta["filepath"] = os.path.abspath(meta["filepath"])
@@ -294,7 +292,7 @@ class Configuration(collections.abc.Mapping):
         keyword = "_module_path"
         if isinstance(config, list):
             for i, el in enumerate(config):
-                config[i] = self._load_modules(config[i])
+                config[i] = self._load_modules(el)
         elif isinstance(config, dict):
             for key in list(config.keys()):
                 if hasattr(key, "endswith"):
@@ -307,8 +305,6 @@ class Configuration(collections.abc.Mapping):
                             "foobar", config[key]
                         )
                         loaded_module = importlib.util.module_from_spec(spec)
-                        # if spec is not None:
-                        # spec.loader.exec_module(loaded_module)
                         target_key = key[: -len(keyword)]
                         self.modules[target_key] = loaded_module
                 if type(config[key]) is dict:
@@ -336,7 +332,7 @@ class Configuration(collections.abc.Mapping):
         keyword = "_load_url"
         if isinstance(config, list):
             for i, el in enumerate(config):
-                config[i] = self._load_remote(config[i])
+                config[i] = self._load_remote(el)
         elif isinstance(config, dict):
             for key in list(config.keys()):
                 if hasattr(key, "endswith"):
@@ -349,8 +345,8 @@ class Configuration(collections.abc.Mapping):
                         )
                         if not has_dl_info:
                             logging.warning(
-                                "The key '{}' has not both keys "
-                                "'source_url' and 'sink_path' ".format(key)
+                                f"The key '{key}' has not both keys "
+                                "'source_url' and 'sink_path' "
                             )
                         else:
                             source = config[key]["source_url"]

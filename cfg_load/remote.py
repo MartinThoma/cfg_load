@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """Load files from remote locations."""
 
 # Core Library
