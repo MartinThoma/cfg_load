@@ -1,17 +1,6 @@
-boto3-stubs[s3]
-boto3
-moto
-pandas
+
+-r ci.txt
 pip-tools
-pytest
-pytest-black
-pytest-cov
-pytest-flake8
-pytest-mccabe
-pytest-mypy
-pytest-timeout
-requests-mock
-responses
-simplejson
+pre-commit
 twine
 wheel

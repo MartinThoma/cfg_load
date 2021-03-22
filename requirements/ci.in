@@ -1,4 +1,7 @@
+-r prod.txt
 black
+boto3
+boto3-stubs[s3]
 flake8
 flake8_implicit_str_concat
 flake8-assert-msg
@@ -12,5 +15,18 @@ flake8-pytest-style
 flake8-raise
 flake8-simplify
 flake8-string-format
+moto
 mypy
+pandas
+pip-tools
 pydocstyle
+pytest
+pytest-black
+pytest-cov
+pytest-flake8
+pytest-mccabe
+pytest-mypy
+pytest-timeout
+requests-mock
+responses
+simplejson
