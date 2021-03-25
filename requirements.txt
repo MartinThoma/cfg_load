@@ -9,7 +9,7 @@ chardet==3.0.4            # via requests
 idna==2.10                # via requests
 mpu[io]==0.23.1           # via cfg_load (setup.py)
 pytz==2020.1              # via cfg_load (setup.py), mpu
-pyyaml==5.3.1             # via cfg_load (setup.py)
+pyyaml==5.4             # via cfg_load (setup.py)
 requests==2.24.0          # via cfg_load (setup.py)
 six==1.15.0               # via cfg_load (setup.py)
 tzlocal==2.1              # via mpu
