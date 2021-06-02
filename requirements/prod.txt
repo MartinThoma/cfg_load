@@ -28,5 +28,5 @@ six==1.15.0
     # via cfg-load (setup.py)
 tzlocal==2.1
     # via mpu
-urllib3==1.26.4
+urllib3==1.26.5
     # via requests
