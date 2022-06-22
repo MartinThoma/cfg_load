@@ -27,12 +27,12 @@ black==20.8b1
     #   pytest-black
 bleach==3.3.0
     # via readme-renderer
-boto3-stubs[s3]==1.17.39.0
-    # via -r ci.txt
 boto3==1.17.39
     # via
     #   -r ci.txt
     #   moto
+boto3-stubs[s3]==1.17.39.0
+    # via -r ci.txt
 botocore==1.20.39
     # via
     #   -r ci.txt
@@ -82,6 +82,20 @@ filelock==3.0.12
     #   -r ci.txt
     #   pytest-mypy
     #   virtualenv
+flake8==3.9.0
+    # via
+    #   -r ci.txt
+    #   flake8-assert-msg
+    #   flake8-bugbear
+    #   flake8-builtins
+    #   flake8-comprehensions
+    #   flake8-eradicate
+    #   flake8-executable
+    #   flake8-isort
+    #   flake8-raise
+    #   flake8-simplify
+    #   flake8-string-format
+    #   pytest-flake8
 flake8-assert-msg==1.1.1
     # via -r ci.txt
 flake8-bugbear==21.3.2
@@ -110,20 +124,6 @@ flake8-simplify==0.14.0
     # via -r ci.txt
 flake8-string-format==0.3.0
     # via -r ci.txt
-flake8==3.9.0
-    # via
-    #   -r ci.txt
-    #   flake8-assert-msg
-    #   flake8-bugbear
-    #   flake8-builtins
-    #   flake8-comprehensions
-    #   flake8-eradicate
-    #   flake8-executable
-    #   flake8-isort
-    #   flake8-raise
-    #   flake8-simplify
-    #   flake8-string-format
-    #   pytest-flake8
 identify==2.2.1
     # via pre-commit
 idna==2.10
@@ -180,6 +180,10 @@ moto==2.0.2
     # via -r ci.txt
 mpu[io]==0.23.1
     # via -r ci.txt
+mypy==0.812
+    # via
+    #   -r ci.txt
+    #   pytest-mypy
 mypy-boto3-s3==1.17.39.0
     # via
     #   -r ci.txt
@@ -189,13 +193,9 @@ mypy-extensions==0.4.3
     #   -r ci.txt
     #   black
     #   mypy
-mypy==0.812
-    # via
-    #   -r ci.txt
-    #   pytest-mypy
 nodeenv==1.5.0
     # via pre-commit
-numpy==1.20.1
+numpy==1.22.0
     # via
     #   -r ci.txt
     #   pandas
@@ -250,6 +250,15 @@ pyparsing==2.4.7
     # via
     #   -r ci.txt
     #   packaging
+pytest==6.2.2
+    # via
+    #   -r ci.txt
+    #   pytest-black
+    #   pytest-cov
+    #   pytest-flake8
+    #   pytest-mccabe
+    #   pytest-mypy
+    #   pytest-timeout
 pytest-black==0.3.12
     # via -r ci.txt
 pytest-cov==2.11.1
@@ -262,15 +271,6 @@ pytest-mypy==0.8.1
     # via -r ci.txt
 pytest-timeout==1.4.2
     # via -r ci.txt
-pytest==6.2.2
-    # via
-    #   -r ci.txt
-    #   pytest-black
-    #   pytest-cov
-    #   pytest-flake8
-    #   pytest-mccabe
-    #   pytest-mypy
-    #   pytest-timeout
 python-dateutil==2.8.1
     # via
     #   -r ci.txt
@@ -294,10 +294,6 @@ regex==2021.3.17
     # via
     #   -r ci.txt
     #   black
-requests-mock==1.8.0
-    # via -r ci.txt
-requests-toolbelt==0.9.1
-    # via twine
 requests==2.25.1
     # via
     #   -r ci.txt
@@ -306,6 +302,10 @@ requests==2.25.1
     #   requests-toolbelt
     #   responses
     #   twine
+requests-mock==1.8.0
+    # via -r ci.txt
+requests-toolbelt==0.9.1
+    # via twine
 responses==0.13.1
     # via
     #   -r ci.txt
