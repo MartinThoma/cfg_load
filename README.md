@@ -25,7 +25,7 @@ If you want the latest version:
 
 ```bash
 $ git clone https://github.com/MartinThoma/cfg_load.git; cd cfg_load
-$ pip instell -e .[all] --user
+$ pip install -e .[all] --user
 ```
 
 
